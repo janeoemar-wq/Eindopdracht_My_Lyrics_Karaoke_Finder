@@ -1,0 +1,16 @@
+In de gitignore staat het volgende:
+# Virtuele omgeving
+.venv/
+
+# PyCharm
+.idea/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Mijn persoonlijke instellingen
+M04_Config.py
+
+# Logbestand
+M07_fouten.log
