@@ -23,7 +23,20 @@
 ✅ .gitignore/Configuratie/.venv, cache en Config uitgesloten/M05_requirements.txt	Packages
 ✅Benodigde bibliotheken geinstalleerd(requests, musicbrainzngs en rich).
 
+✅ Git repository geïnitialiseerd
 
+✅ Eerste commit gemaakt
+   • Dag 1 - Projectopstart, structuur bedacht
+
+✅ Eerste tag gemaakt
+   • 2026-10-14_opstart
+
+✅ GitHub repository aangemaakt
+   • janeoemar-wq/Eindopdracht_My_Lyrics_Karaoke_Finder
+
+⬜ GitHub gekoppeld
+
+⬜ Eerste push uitgevoerd
 ==================================================
 TODO - VOLGENDE WERKDAG
 ==================================================
