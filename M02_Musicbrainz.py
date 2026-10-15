@@ -69,6 +69,20 @@ def toon_artiesten(artiest_naam):
     keuze = console.input(
         "\nKies artiestnummer: "
     )
+    if not keuze.isdigit():
+        return
+    keuze = int(keuze)
+    if keuze < 1 or keuze > len(artiesten[:10]):
+        return
+    gekozen_artiest = artiesten[keuze - 1]
+    naam = gekozen_artiest.get("name", "Onbekend")
+    land = gekozen_artiest.get("country", "-")
+    soort = gekozen_artiest.get("type", "-")
+
+    console.print()
+    console.print(f"[bold yellow]Naam:[/bold yellow] {naam}")
+    console.print(f"[bold yellow]Land:[/bold yellow] {land}")
+    console.print(f"[bold yellow]Type:[/bold yellow] {soort}")
 
 
 if __name__ == "__main__":
