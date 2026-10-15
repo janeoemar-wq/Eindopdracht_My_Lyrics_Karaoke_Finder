@@ -1,32 +1,18 @@
 
 import musicbrainzngs
 from rich.console import Console
-from rich.panel import Panel
-from rich.table import Table
 from M04_Config import EMAIL
+from rich.table import Table
 
-console = Console()
 #API identificatie instellen
 musicbrainzngs.set_useragent(
     "My Lyrics Finder",
     "1.0",
     EMAIL
 )
-import musicbrainzngs
-
-from rich.console import Console
-from rich.table import Table
-
 from M04_Config import EMAIL
 
 console = Console()
-
-musicbrainzngs.set_useragent(
-    "My Lyrics Finder",
-    "1.0",
-    EMAIL
-)
-
 
 def zoek_artiest(artiest_naam):
 
@@ -52,37 +38,37 @@ def toon_artiesten(artiest_naam):
     resultaat = zoek_artiest(
         artiest_naam
     )
-
     if resultaat is None:
         return
-
     artiesten = resultaat["artist-list"]
-
     if len(artiesten) == 0:
-
         console.print(
             "[bold red]Geen artiesten gevonden.[/bold red]"
         )
-
         return
-
     tabel = Table(
         title="Zoekresultaten"
     )
-
+    tabel.add_column("Nr")
     tabel.add_column("Naam")
     tabel.add_column("Land")
     tabel.add_column("Type")
 
-    for artiest in artiesten[:10]:
-
+    for nummer, artiest in enumerate(
+            artiesten[:10],
+            start=1
+    ):
         tabel.add_row(
+            str(nummer),
             artiest.get("name", "-"),
             artiest.get("country", "-"),
             artiest.get("type", "-")
         )
 
     console.print(tabel)
+    keuze = console.input(
+        "\nKies artiestnummer: "
+    )
 
 
 if __name__ == "__main__":
