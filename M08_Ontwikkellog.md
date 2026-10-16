@@ -67,3 +67,15 @@ TODO - DAARNA
 ⬜ Karaokefunctie bouwen
 
 
+16 oktober:
+
+Queen gekozen
+↓
+Panel: NUMMERS VAN QUEEN
+↓
+10 nummers tonen
+↓
+1 t/m 10 = nummer kiezen
+N = volgende 10
+V = vorige 10
+T = terug

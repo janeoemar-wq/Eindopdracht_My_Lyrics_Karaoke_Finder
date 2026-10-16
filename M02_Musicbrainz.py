@@ -3,6 +3,7 @@ import musicbrainzngs
 from rich.console import Console
 from M04_Config import EMAIL
 from rich.table import Table
+from rich.panel import Panel
 
 #API identificatie instellen
 musicbrainzngs.set_useragent(
@@ -50,8 +51,9 @@ def toon_artiesten(artiest_naam):
         )
         return
     tabel = Table(
-        title="Zoekresultaten"
+        border_style="bright_yellow"
     )
+
     tabel.add_column("Nr")
     tabel.add_column("Naam")
     tabel.add_column("Land")
@@ -68,7 +70,15 @@ def toon_artiesten(artiest_naam):
             artiest.get("type", "-")
         )
 
-    console.print(tabel)
+    console.print(
+        Panel(
+            tabel,
+            title="[bold bright_white]ZOEKRESULTATEN[/bold bright_white]",
+            title_align="center",
+            border_style="bright_yellow",
+            width=50,
+        )
+    )
     keuze = console.input(
         "\nKies artiestnummer: "
     )
@@ -90,9 +100,41 @@ def toon_artiesten(artiest_naam):
     console.print(f"[bold yellow]Type:[/bold yellow] {soort}")
 
 #TOON NUMMERS VAN ARTIEST
+    artist_id = gekozen_artiest["id"]
+    console.print(
+        f"[green]Artist ID gevonden:[/green] {artist_id}"
+    )
 
+    toon_nummers_van_artiest(artist_id)
 
-#hoofdprogramma
+def toon_nummers_van_artiest(artist_id):
+    resultaat = musicbrainzngs.browse_recordings(
+        artist=artist_id,
+        limit=20,
+        offset = 0
+    )
+    nummers = resultaat["recording-list"]
+    for nummer, lied in enumerate(nummers, start=1):
+        console.print(
+            f"{nummer}. {lied['title']}"
+        )
+       #
+    # unieke_nummers = []
+    #
+    # for lied in nummers:
+    #     console.print(lied["title"])
+    #     titel = lied["title"]
+    #
+    #     if titel not in unieke_nummers:
+    #         unieke_nummers.append(titel)
+    #
+    # for nummer, titel in enumerate(unieke_nummers, start=1):
+    #
+    #     console.print(
+    #         f"{nummer}. {lied['title']}"
+    #     )
+
+    # hoofdprogramma
 if __name__ == "__main__":
 
     while True:

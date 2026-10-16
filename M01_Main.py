@@ -9,6 +9,7 @@ direct onder het logo
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
+from M02_Musicbrainz import toon_artiesten
 
 console = Console()
 # begin LOGO
@@ -81,7 +82,14 @@ if keuze == "1":
     width=50,
     )
     )
-
+    submenu_keuze = console.input(
+        "\n[bold white]Maak een keuze (0-2): [/bold white]"
+    ).strip()
+    if submenu_keuze == "1":
+        artiest_naam = console.input(
+            "\n[bold white]Voer artiestnaam in: [/bold white]"
+        )
+        toon_artiesten(artiest_naam)
 
 elif keuze == "2":
     console.clear()
