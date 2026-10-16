@@ -1,4 +1,4 @@
-
+import requests
 import musicbrainzngs
 from rich.console import Console
 from M04_Config import EMAIL
@@ -40,7 +40,10 @@ def toon_artiesten(artiest_naam):
     )
     if resultaat is None:
         return
+
     artiesten = resultaat["artist-list"]
+
+
     if len(artiesten) == 0:
         console.print(
             "[bold red]Geen artiesten gevonden.[/bold red]"
@@ -79,12 +82,17 @@ def toon_artiesten(artiest_naam):
     land = gekozen_artiest.get("country", "-")
     soort = gekozen_artiest.get("type", "-")
 
+
+
     console.print()
     console.print(f"[bold yellow]Naam:[/bold yellow] {naam}")
     console.print(f"[bold yellow]Land:[/bold yellow] {land}")
     console.print(f"[bold yellow]Type:[/bold yellow] {soort}")
 
+#TOON NUMMERS VAN ARTIEST
 
+
+#hoofdprogramma
 if __name__ == "__main__":
 
     while True:

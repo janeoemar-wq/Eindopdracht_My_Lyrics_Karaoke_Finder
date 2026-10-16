@@ -11,14 +11,24 @@ from rich.panel import Panel
 from rich.table import Table
 
 console = Console()
+# begin LOGO
+console.print(
+    Panel(
+        "[bold bright_white]My Lyrics & Karaoke Finder[/bold bright_white]",
+        subtitle="[bright_yellow]2026 NOVI Eindopdracht[/bright_yellow]",
+        border_style="bold yellow",
+        width=50,
+    ),
+)
 
+console.print()
 #EINDE LOGO
 
 #begin hoofmenu
 def toon_hoofdmenu():
     tabel = Table(
         border_style="bright_yellow",
-        width=46
+        width=50,
     )
 
     tabel.add_column("Keuze", justify="center")
@@ -37,7 +47,6 @@ def toon_hoofdmenu():
             border_style="bright_yellow",
             width=50,
         ),
-        justify="center"
     )
 toon_hoofdmenu()
 #EINDE TOON HOOFDMENU
@@ -49,25 +58,13 @@ while True:
     console.print("[bold red]Ongeldige invoer! Kies 0, 1, 2, 3[/bold red]")
 
 #keuze validatie(1,2,3, en 0)
-if keuze == "1":
-    console.clear()
-    # begin LOGO
-    console.print(
-        Panel(
-            "[bold bright_white]My Lyrics & Karaoke Finder[/bold bright_white]",
-            subtitle="[bright_yellow]2026 NOVI Eindopdracht[/bright_yellow]",
-            border_style="bold yellow",
-            width=50,
-        ),
-        justify="center"
-    )
 
-    console.print()
+if keuze == "1":
 
     submenu = Table(
-        border_style="bright_yellow",
-        width=46
-    )
+    border_style="bright_yellow",
+    width=50
+)
 
     submenu.add_column("Keuze", justify="center")
     submenu.add_column("Actie")
@@ -75,33 +72,23 @@ if keuze == "1":
     submenu.add_row("1", "Zoek artiest")
     submenu.add_row("2", "Zoek nummer")
     submenu.add_row("0", "Terug")
+    console.print(
+    Panel(
+    submenu,
+    title="[bold bright_white]MUZIEK & SONGTEKST[/bold bright_white]",
+    title_align="center",
+    border_style="bright_yellow",
+    width=50,
+    )
+    )
 
-    console.print(
-        Panel(
-            submenu,
-            title="[bold bright_white]MUZIEK & SONGTEKST[/bold bright_white]",
-            title_align="center",
-            border_style="bright_yellow",
-            width=50,
-        ),
-        justify="center"
-    )
+
 elif keuze == "2":
-    # begin LOGO
-    console.print(
-        Panel(
-            "[bold bright_white]My Lyrics & Karaoke Finder[/bold bright_white]",
-            subtitle="[bright_yellow]2026 NOVI Eindopdracht[/bright_yellow]",
-            border_style="bold yellow",
-            width=50,
-        ),
-        justify="center"
-    )
+    console.clear()
 
     submenu = Table(
-        title="[bold bright_white]OPGESLAGEN NUMMERS[/bold bright_white]",
-        border_style="bright_yellow",
-        width=40
+    border_style="bright_yellow",
+    width=50
     )
 
     submenu.add_column("Keuze", justify="center")
@@ -111,22 +98,22 @@ elif keuze == "2":
     submenu.add_row("2", "Favoriet verwijderen")
     submenu.add_row("0", "Terug")
 
-    console.print(submenu)
+    console.print(
+Panel(
+            submenu,
+            title="[bold bright_white]OPGESLAGEN NUMMERS[/bold bright_white]",
+            title_align="center",
+            border_style="bright_yellow",
+            width=50,
+        )
+
+    )
 
 elif keuze == "3":
-    # begin LOGO
-    console.print(
-        Panel(
-            "[bold bright_white]My Lyrics & Karaoke Finder[/bold bright_white]",
-            subtitle="[bright_yellow]2026 NOVI Eindopdracht[/bright_yellow]",
-            border_style="bold yellow",
-            width=50,
-        ),
-        justify="center"
-    )
+
     submenu = Table(
-        title="[bold bright_white]KARAOKE[/bold bright_white]",
-        border_style="bright_yellow"
+        border_style="bright_yellow",
+        width=50
     )
 
     submenu.add_column("Keuze", justify="center")
@@ -139,12 +126,12 @@ elif keuze == "3":
     console.print(
         Panel(
             submenu,
-            title="[bold bright_white]MUZIEK & SONGTEKST[/bold bright_white]",
+            title="[bold bright_white]KARAOKE[/bold bright_white]",
             title_align="center",
             border_style="bright_yellow",
-            width=50
-        ),
-        justify="center"
+            width=50,
+        )
+
     )
 
 elif keuze == "0":
