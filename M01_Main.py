@@ -89,7 +89,13 @@ if keuze == "1":
         artiest_naam = console.input(
             "\n[bold white]Voer artiestnaam in: [/bold white]"
         )
-        toon_artiesten(artiest_naam)
+
+        actie = toon_artiesten(
+            artiest_naam
+        )
+
+        if actie == "hoofdmenu":
+            toon_hoofdmenu()
 
 elif keuze == "2":
     console.clear()

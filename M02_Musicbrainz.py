@@ -1,9 +1,10 @@
-import requests
+
 import musicbrainzngs
 from rich.console import Console
 from M04_Config import EMAIL
 from rich.table import Table
 from rich.panel import Panel
+from rich.columns import Columns
 
 #API identificatie instellen
 musicbrainzngs.set_useragent(
@@ -11,29 +12,24 @@ musicbrainzngs.set_useragent(
     "1.0",
     EMAIL
 )
-from M04_Config import EMAIL
 
 console = Console()
-
+#Stuur de ingevoerde artiestnaam naar MusicBrainz.
 def zoek_artiest(artiest_naam):
-
     try:
-
         resultaat = musicbrainzngs.search_artists(
             artiest_naam
         )
-
         return resultaat
-
     except Exception as fout:
-
         console.print(
             f"[bold red]Fout:[/bold red] {fout}"
         )
+        return None# zorgt ervoor dat de functie niet vastloopt na een fout
 
-        return None
-
-
+#Zoekt artiesten op,
+# toont de resultaten, laat de gebruiker een
+# artiest kiezen en haalt daarna de gegevens van die artiest op.
 def toon_artiesten(artiest_naam):
 
     resultaat = zoek_artiest(
@@ -41,109 +37,262 @@ def toon_artiesten(artiest_naam):
     )
     if resultaat is None:
         return
-
+#Haal de lijst met gevonden artiesten uit het resultaat.
     artiesten = resultaat["artist-list"]
 
 
+
+#len = tel hoeveel artiesten er zijn, als er geen artiest gevonden is, print in rood
     if len(artiesten) == 0:
         console.print(
             "[bold red]Geen artiesten gevonden.[/bold red]"
         )
-        return
-    tabel = Table(
+        return # FUNCTIE def toon_artiesten STOPPEN, onderstaande tabel wordt niet gemaakt.
+
+
+#1Tabel: opmaken zodat het resultaat netjes verwerkt wordt
+#Rich tabel leeg tabel aanmaken en opmaken
+    linker_tabel = Table(
+        border_style="bright_yellow"
+    )
+    rechter_tabel = Table(
         border_style="bright_yellow"
     )
 
-    tabel.add_column("Nr")
-    tabel.add_column("Naam")
-    tabel.add_column("Land")
-    tabel.add_column("Type")
 
-    for nummer, artiest in enumerate(
-            artiesten[:10],
+# 2 Kolommen: in tabel voor headers van bovenstaanse tabel aanmaken (headers)
+    linker_tabel.add_column("Nr")
+    linker_tabel.add_column("Naam")
+    linker_tabel.add_column("Type")
+    linker_tabel.add_column("Beschrijving")
+
+    rechter_tabel.add_column("Nr")
+    rechter_tabel.add_column("Naam")
+    rechter_tabel.add_column("Type")
+    rechter_tabel.add_column("Beschrijving")
+
+#3 rijen: eerste 10 artiesten toevoegen
+#enumerate=voeg automatisch nummers toe,begin bij 1
+    for nummer, artiest_musicbrainz in enumerate(
+            artiesten[:5],
             start=1
     ):
-        tabel.add_row(
+        linker_tabel.add_row(
             str(nummer),
-            artiest.get("name", "-"),
-            artiest.get("country", "-"),
-            artiest.get("type", "-")
+            artiest_musicbrainz.get("name", "-"),
+            artiest_musicbrainz.get("type", "-"),
+            artiest_musicbrainz.get("disambiguation", "-")
         )
+
+    for nummer, artiest_musicbrainz in enumerate(
+            artiesten[5:10],
+            start=6
+    ):
+        rechter_tabel.add_row(
+            str(nummer),
+            artiest_musicbrainz.get("name", "-"),
+            artiest_musicbrainz.get("type", "-"),
+            artiest_musicbrainz.get("disambiguation", "-")
+        )
+
 
     console.print(
         Panel(
-            tabel,
-            title="[bold bright_white]ZOEKRESULTATEN[/bold bright_white]",
+            Columns(
+                [linker_tabel, rechter_tabel],
+                equal=True,
+                expand=True
+            ),
+            title=f"[bold bright_white]RESULTATEN VOOR {artiest_naam.upper()}[/bold bright_white]",
             title_align="center",
             border_style="bright_yellow",
-            width=50,
+            width=160,
         )
     )
-    keuze = console.input(
-        "\nKies artiestnummer: "
-    )
-    if not keuze.isdigit():
-        return
-    keuze = int(keuze)
-    if keuze < 1 or keuze > len(artiesten[:10]):
-        return
-    gekozen_artiest = artiesten[keuze - 1]
-    naam = gekozen_artiest.get("name", "Onbekend")
-    land = gekozen_artiest.get("country", "-")
-    soort = gekozen_artiest.get("type", "-")
-
-
-
     console.print()
-    console.print(f"[bold yellow]Naam:[/bold yellow] {naam}")
-    console.print(f"[bold yellow]Land:[/bold yellow] {land}")
-    console.print(f"[bold yellow]Type:[/bold yellow] {soort}")
 
-#TOON NUMMERS VAN ARTIEST
-    artist_id = gekozen_artiest["id"]
-    console.print(
-        f"[green]Artist ID gevonden:[/green] {artist_id}"
+    console.print("1-20 = Artiest kiezen")
+    console.print("N    = Volgende artiesten")
+    console.print("V    = Vorige artiesten")
+    console.print("0    = Terug")
+    console.print("S    = Hoofdmenu")
+
+#Vraag de gebruiker te maken:1-10 = Artiest kiezen
+# N    = Volgende artiesten
+# V    = Vorige artiesten
+# 0    = Terug
+# S    = Hoofdmenu
+    keuze = console.input(
+        "\nMaak keuze: "
     )
-
-    toon_nummers_van_artiest(artist_id)
-
-def toon_nummers_van_artiest(artist_id):
-    resultaat = musicbrainzngs.browse_recordings(
-        artist=artist_id,
-        limit=20,
-        offset = 0
-    )
-    nummers = resultaat["recording-list"]
-    for nummer, lied in enumerate(nummers, start=1):
+#keuze maken
+    if keuze.upper() == "N":
         console.print(
-            f"{nummer}. {lied['title']}"
+            "[yellow]Volgende pagina nog bouwen[/yellow]"
         )
-       #
-    # unieke_nummers = []
-    #
-    # for lied in nummers:
-    #     console.print(lied["title"])
-    #     titel = lied["title"]
-    #
-    #     if titel not in unieke_nummers:
-    #         unieke_nummers.append(titel)
-    #
-    # for nummer, titel in enumerate(unieke_nummers, start=1):
-    #
-    #     console.print(
-    #         f"{nummer}. {lied['title']}"
-    #     )
+        return
 
-    # hoofdprogramma
-if __name__ == "__main__":
+    elif keuze.upper() == "V":
+        console.print(
+            "[yellow]Vorige pagina nog bouwen[/yellow]"
+        )
+        return
+
+
+    elif keuze.upper() == "S":
+
+        return "hoofdmenu"
+
+
+    elif keuze == "0":
+
+        return "terug"
+
+    elif keuze.isdigit():
+
+        keuze = int(keuze)
+
+        if keuze < 1 or keuze > 10:
+            console.print(
+                "[red]Ongeldige keuze[/red]"
+            )
+            return
+
+        gekozen_artiest = artiesten[keuze - 1]
+
+        artiest_naam = gekozen_artiest["name"]
+        artist_id = gekozen_artiest["id"]
+
+        actie = toon_nummers_van_artiest(
+            artist_id,
+            artiest_naam
+        )
+        console.print(actie)
+        # if actie == "terug":
+        #     return
+        #
+        # if actie == "hoofdmenu":
+        #     return "hoofdmenu"
+
+    else:
+        console.print(
+            "[red]Ongeldige keuze[/red]"
+        )
+
+def toon_nummers_van_artiest(
+        artist_id,
+        artiest_naam
+):
+
+    resultaat = musicbrainzngs.get_artist_by_id(
+        artist_id,
+        includes=["works"]
+    )
+
+    works = resultaat["artist"]["work-list"]
+
+    pagina = 0
 
     while True:
 
-        artiest = console.input(
-            "\n[bold yellow]Naam artiest (0 = stoppen): [/bold yellow]"
+        linker_tabel = Table(
+            border_style="bright_yellow"
+        )
+        linker_tabel.add_column(
+            "Nr",
+            justify="center"
+        )
+        linker_tabel.add_column(
+            "Titel"
         )
 
-        if artiest == "0":
-            break
+        rechter_tabel = Table(
+            border_style="bright_yellow"
+        )
+        rechter_tabel.add_column(
+            "Nr",
+            justify="center"
+        )
+        rechter_tabel.add_column(
+            "Titel"
+        )
 
-        toon_artiesten(artiest)
+        start = pagina * 20
+
+        for nummer, work in enumerate(
+                works[start:start + 10],
+                start=start + 1
+        ):
+            linker_tabel.add_row(
+                str(nummer),
+                work["title"]
+            )
+
+        for nummer, work in enumerate(
+                works[start + 10:start + 20],
+                start=start + 11
+        ):
+            rechter_tabel.add_row(
+                str(nummer),
+                work["title"]
+            )
+
+        console.print(
+            Panel(
+                Columns(
+                    [linker_tabel, rechter_tabel],
+                    equal=True,
+                    expand=True
+                ),
+                title=f"[bold bright_white]NUMMERS VAN {artiest_naam.upper()}[/bold bright_white]",
+                title_align="center",
+                border_style="bright_yellow",
+                width=160
+            )
+        )
+
+        console.print()
+
+        console.print("1-20 = Nummer kiezen")
+        console.print("N    = Volgende")
+        console.print("V    = Vorige")
+        console.print("0    = Terug")
+        console.print("S    = Hoofdmenu")
+
+        keuze = console.input(
+            "\nMaak keuze: "
+        )
+
+        if keuze.upper() == "N":
+
+            if start + 20 < len(works):
+                pagina += 1
+            else:
+                console.print(
+                    "[red]Geen volgende pagina.[/red]"
+                )
+
+        elif keuze.upper() == "V":
+
+            if pagina > 0:
+                pagina -= 1
+            else:
+                console.print(
+                    "[red]Geen vorige pagina.[/red]"
+                )
+
+        elif keuze == "0":
+            return
+
+
+        elif keuze.upper() == "S":
+            return
+
+
+        else:
+
+            console.print(
+
+                "[red]Ongeldige keuze[/red]"
+
+            )
