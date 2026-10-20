@@ -1,10 +1,3 @@
-"""
-zelfde breedte
-zelfde kleur
-gecentreerd
-titel in bovenste rand
-direct onder het logo
-"""
 
 from rich.console import Console
 from rich.panel import Panel
@@ -15,11 +8,14 @@ console = Console()
 # begin LOGO
 console.print(
     Panel(
-        "[bold bright_white]My Lyrics & Karaoke Finder[/bold bright_white]",
-        subtitle="[bright_yellow]2026 NOVI Eindopdracht[/bright_yellow]",
+"[center][bold bright_white]My Lyrics & Karaoke Finder[/bold bright_white][/center]",
+        title="[bold bright_white]2026 NOVI Eindopdracht[/bold bright_white]",
+        title_align="center",
         border_style="bold yellow",
         width=50,
+
     ),
+    justify="left"
 )
 
 console.print()
@@ -29,7 +25,7 @@ console.print()
 def toon_hoofdmenu():
     tabel = Table(
         border_style="bright_yellow",
-        width=50,
+        width=45
     )
 
     tabel.add_column("Keuze", justify="center")
@@ -46,9 +42,10 @@ def toon_hoofdmenu():
             title="[bold bright_white]HOOFDMENU[/bold bright_white]",
             title_align="center",
             border_style="bright_yellow",
-            width=50,
-        ),
+            width=50
+        )
     )
+
 toon_hoofdmenu()
 #EINDE TOON HOOFDMENU
 
@@ -64,7 +61,7 @@ if keuze == "1":
 
     submenu = Table(
     border_style="bright_yellow",
-    width=50
+    width=45
 )
 
     submenu.add_column("Keuze", justify="center")
@@ -82,27 +79,25 @@ if keuze == "1":
     width=50,
     )
     )
-    submenu_keuze = console.input(
-        "\n[bold white]Maak een keuze (0-2): [/bold white]"
-    ).strip()
-    if submenu_keuze == "1":
-        artiest_naam = console.input(
-            "\n[bold white]Voer artiestnaam in: [/bold white]"
-        )
 
-        actie = toon_artiesten(
-            artiest_naam
-        )
+    artiest_naam = console.input(
+        "\n[bold white]Voer artiestnaam in: [/bold white]"
+    )
 
-        if actie == "hoofdmenu":
-            toon_hoofdmenu()
+    actie = toon_artiesten(
+        artiest_naam
+    )
+
+    if actie == "hoofdmenu":
+        toon_hoofdmenu()
 
 elif keuze == "2":
+
     console.clear()
 
     submenu = Table(
-    border_style="bright_yellow",
-    width=50
+        border_style="bright_yellow",
+        width=50
     )
 
     submenu.add_column("Keuze", justify="center")
@@ -111,6 +106,46 @@ elif keuze == "2":
     submenu.add_row("1", "Favorieten bekijken")
     submenu.add_row("2", "Favoriet verwijderen")
     submenu.add_row("0", "Terug")
+
+    console.print(
+        Panel(
+            submenu,
+            title="[bold bright_white]OPGESLAGEN NUMMERS[/bold bright_white]",
+            title_align="center",
+            border_style="bright_yellow",
+            width=50,
+        )
+    )
+
+    submenu_keuze = console.input(
+        "\n[bold white]Maak een keuze (0-2): [/bold white]"
+    ).strip()
+
+    if submenu_keuze == "1":
+
+        try:
+
+            with open(
+                    "favorieten.txt",
+                    "r",
+                    encoding="utf-8"
+            ) as bestand:
+
+                favorieten = bestand.read()
+
+            console.print(
+                Panel(
+                    favorieten,
+                    title="[bold bright_white]FAVORIETEN[/bold bright_white]",
+                    border_style="bright_yellow"
+                )
+            )
+
+        except FileNotFoundError:
+
+            console.print(
+                "[red]Geen favorieten gevonden.[/red]"
+            )
 
     console.print(
 Panel(
@@ -122,6 +157,34 @@ Panel(
         )
 
     )
+    submenu_keuze = console.input(
+            "\n[bold white]Maak een keuze (0-2): [/bold white]"
+        ).strip()
+    if submenu_keuze == "1":
+
+        try:
+
+            with open(
+                    "favorieten.txt",
+                    "r",
+                    encoding="utf-8"
+            ) as bestand:
+
+                favorieten = bestand.read()
+
+            console.print(
+                Panel(
+                    favorieten,
+                    title="[bold bright_white]FAVORIETEN[/bold bright_white]",
+                    border_style="bright_yellow"
+                )
+            )
+
+        except FileNotFoundError:
+
+            console.print(
+                "[red]Geen favorieten gevonden.[/red]"
+            )
 
 elif keuze == "3":
 

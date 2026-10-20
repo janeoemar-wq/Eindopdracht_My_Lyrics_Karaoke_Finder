@@ -79,3 +79,76 @@ Panel: NUMMERS VAN QUEEN
 N = volgende 10
 V = vorige 10
 T = terug
+
+20 okt:
+Bestand: M02_Musicbrainz.py
+Functie: toon_artiesten()
+Aangepast:Zoekopdrachten zoals 'Queen' toonden ook artiesten met 'queen' in een bijnaam of beschrijving, zoals Madonna ('Queen of Pop').
+Resultaten van MusicBrainz worden nu gefilterd op exacte overeenkomst met de ingevoerde artiestnaam. 
+Hierdoor worden bij zoekopdrachten zoals 'Queen' geen artiesten meer getoond die het woord 'queen' alleen in 
+een bijnaam of beschrijving hebben.
+
+# OPmaak 2 kolommen tekst verdeeld 
+
+RESULTATEN VOOR ...
+NUMMERS VAN ...
+toekomstige LYRICS
+toekomstige FAVORIETEN
+
+border_style="bright_yellow"
+Nr = vaste breedte 3- width=3
+Naam = vaste breedte 10- width=10
+Type = vaste breedte 10- width=10
+
+Beschrijving = maximaal 20 tekens - max_width=20
+Titel:max_width=35
+Columns(
+    [linker_tabel, rechter_tabel],
+    equal=True,
+    expand=True)
+
+Panel
+title_align="center"
+border_style="bright_yellow"
+width=160
+
+Verdeling links/rechts: midden = (len(resultaten) + 1) // 2
+daardoor:
+Linker en rechter tabel even breed
+Tabellen verdeeld over de volledige panelbreedte
+6 resultaten → 3 links / 3 rechts
+7 resultaten → 4 links / 3 rechts
+8 resultaten → 4 links / 4 rechts
+10 resultaten → 5 links / 5 rechts 
+
+Fase: Songtekst ophalen
+
+Stap/Onderdeel: Lyrics API gekoppeld
+
+Functie/codeblok: toon_songtekst()
+
+Aanpassing: Tweede webrequest toegevoegd met Lyrics.ovh. De gekozen artiest en songtitel worden gebruikt om automatisch de bijbehorende songtekst op te halen en weer te geven in een Rich Panel. De API gebruikt het endpoint https://api.lyrics.ovh/v1/{artist}/{title}.
+
+Waarom: Om na het kiezen van een nummer direct de songtekst te kunnen tonen.
+
+Resultaat: De songtekst van het gekozen nummer wordt succesvol opgehaald en weergegeven.
+
+Status: het werkt!!!!
+
+Stap/Onderdeel:
+Favorieten opslaan
+
+Functie/codeblok:
+sla_favoriet_op()
+
+Aanpassing:
+Gekozen artiest en songtitel worden opgeslagen in favorieten.txt.
+
+Waarom:
+Voldoen aan de opdracht-eis om gegevens op te slaan in een lokaal bestand.
+
+Resultaat:
+Na het kiezen van "J" wordt het nummer toegevoegd aan favorieten.txt.
+
+Status:
+Werkend
