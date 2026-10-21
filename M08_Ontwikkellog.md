@@ -152,3 +152,8 @@ Na het kiezen van "J" wordt het nummer toegevoegd aan favorieten.txt.
 
 Status:
 Werkend
+
+FAVORIETYN:
+Stap 1A - Favorietenbestand aanmaken txt
+Stap 1B - Testen
+Stap 1C - Functie aanroepen

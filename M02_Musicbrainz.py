@@ -383,7 +383,7 @@ def sla_favoriet_op(
         songtitel
 ):
     with open(
-            "favorieten.txt",
+            "M09_favorieten.txt",
             "a",
             encoding="utf-8"
     ) as bestand:
@@ -394,4 +394,119 @@ def sla_favoriet_op(
 
     console.print(
         "[green]Favoriet opgeslagen.[/green]"
+    )
+#TOON FAVORIETEN_______________________________
+def toon_favorieten():
+
+    try:
+
+        with open(
+                "M09_favorieten.txt",
+                "r",
+                encoding="utf-8"
+        ) as bestand:
+
+            favorieten = bestand.readlines()
+
+        if len(favorieten) == 0:
+
+            console.print(
+                "[yellow]Geen favorieten gevonden.[/yellow]"
+            )
+            return
+
+        tabel = Table(
+            border_style="bright_yellow"
+        )
+
+        tabel.add_column(
+            "Nr",
+            width=5
+        )
+
+        tabel.add_column(
+            "Favoriet",
+            width=100
+        )
+
+        for nummer, favoriet in enumerate(
+                favorieten,
+                start=1
+        ):
+
+            tabel.add_row(
+                str(nummer),
+                f"[cyan]{favoriet.strip()}[/cyan]"
+            )
+
+        console.print(
+            Panel(
+                tabel,
+                title="[bold bright_white]OPGESLAGEN NUMMERS[/bold bright_white]",
+                border_style="bright_yellow"
+            )
+        )
+
+    except FileNotFoundError:
+
+        console.print(
+            "[yellow]Nog geen favorieten opgeslagen.[/yellow]"
+        )
+
+#VERWIJDER FAVORIET
+def verwijder_favoriet():
+
+    with open(
+            "M09_favorieten.txt",
+            "r",
+            encoding="utf-8"
+    ) as bestand:
+
+        favorieten = bestand.readlines()
+
+    for nummer, favoriet in enumerate(
+            favorieten,
+            start=1
+    ):
+
+        console.print(
+            f"{nummer}. {favoriet.strip()}"
+        )
+    keuze = console.input(
+        "\nNummer om te verwijderen (0 = Terug, S = Hoofdmenu): "
+    ).upper()
+
+    if keuze == "0":
+        return
+    if keuze == "S":
+        return "hoofdmenu"
+    try:
+
+        keuze = int(keuze)
+
+    except ValueError:
+
+        console.print(
+            "[red]Voer een nummer in[/red]"
+        )
+        return
+
+#controle foutieve keuze
+    if keuze < 1 or keuze > len(favorieten):
+        console.print(
+            "[red]Ongeldig nummer[/red]"
+        )
+        return
+
+    del favorieten[keuze - 1]
+    with open(
+            "M09_favorieten.txt",
+            "w",
+            encoding="utf-8"
+    ) as bestand:
+        bestand.writelines(
+            favorieten
+        )
+    console.print(
+        "[green]Favoriet verwijderd.[/green]"
     )

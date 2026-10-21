@@ -2,7 +2,7 @@
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
-from M02_Musicbrainz import toon_artiesten
+from M02_Musicbrainz import toon_artiesten, toon_favorieten, verwijder_favoriet
 
 console = Console()
 # begin LOGO
@@ -93,127 +93,83 @@ if keuze == "1":
 
 elif keuze == "2":
 
-    console.clear()
+    while True:
 
-    submenu = Table(
-        border_style="bright_yellow",
-        width=50
-    )
+        console.clear()
 
-    submenu.add_column("Keuze", justify="center")
-    submenu.add_column("Actie")
-
-    submenu.add_row("1", "Favorieten bekijken")
-    submenu.add_row("2", "Favoriet verwijderen")
-    submenu.add_row("0", "Terug")
-
-    console.print(
-        Panel(
-            submenu,
-            title="[bold bright_white]OPGESLAGEN NUMMERS[/bold bright_white]",
-            title_align="center",
+        submenu = Table(
             border_style="bright_yellow",
-            width=50,
-        )
-    )
-
-    submenu_keuze = console.input(
-        "\n[bold white]Maak een keuze (0-2): [/bold white]"
-    ).strip()
-
-    if submenu_keuze == "1":
-
-        try:
-
-            with open(
-                    "favorieten.txt",
-                    "r",
-                    encoding="utf-8"
-            ) as bestand:
-
-                favorieten = bestand.read()
-
-            console.print(
-                Panel(
-                    favorieten,
-                    title="[bold bright_white]FAVORIETEN[/bold bright_white]",
-                    border_style="bright_yellow"
-                )
-            )
-
-        except FileNotFoundError:
-
-            console.print(
-                "[red]Geen favorieten gevonden.[/red]"
-            )
-
-    console.print(
-Panel(
-            submenu,
-            title="[bold bright_white]OPGESLAGEN NUMMERS[/bold bright_white]",
-            title_align="center",
-            border_style="bright_yellow",
-            width=50,
+            width=50
         )
 
-    )
-    submenu_keuze = console.input(
+        submenu.add_column("Keuze", justify="center")
+        submenu.add_column("Actie")
+
+        submenu.add_row("1", "Favorieten bekijken")
+        submenu.add_row("2", "Favoriet verwijderen")
+        submenu.add_row("0", "Terug")
+
+        console.print(
+            Panel(
+                submenu,
+                title="[bold bright_white]OPGESLAGEN NUMMERS[/bold bright_white]",
+                title_align="center",
+                border_style="bright_yellow",
+                width=50,
+            )
+        )
+
+        submenu_keuze = console.input(
             "\n[bold white]Maak een keuze (0-2): [/bold white]"
         ).strip()
-    if submenu_keuze == "1":
 
-        try:
+        if submenu_keuze == "1":
 
-            with open(
-                    "favorieten.txt",
-                    "r",
-                    encoding="utf-8"
-            ) as bestand:
+            toon_favorieten()
 
-                favorieten = bestand.read()
+            console.input(
+                "\nDruk op Enter om verder te gaan..."
+            )
+
+
+
+        elif submenu_keuze == "2":
+
+            verwijder_favoriet()
+
+
+
+        elif submenu_keuze == "0":
+
+            break
+
+        elif keuze == "3":
+
+            submenu = Table(
+                border_style="bright_yellow",
+                width=50
+            )
+
+            submenu.add_column("Keuze", justify="center")
+            submenu.add_column("Actie")
+
+            submenu.add_row("1", "Zoek karaokevideo")
+            submenu.add_row("2", "Open YouTube-resultaten")
+            submenu.add_row("0", "Terug")
 
             console.print(
                 Panel(
-                    favorieten,
-                    title="[bold bright_white]FAVORIETEN[/bold bright_white]",
-                    border_style="bright_yellow"
+                    submenu,
+                    title="[bold bright_white]KARAOKE[/bold bright_white]",
+                    title_align="center",
+                    border_style="bright_yellow",
+                    width=50,
                 )
+
             )
 
-        except FileNotFoundError:
-
-            console.print(
-                "[red]Geen favorieten gevonden.[/red]"
-            )
-
-elif keuze == "3":
-
-    submenu = Table(
-        border_style="bright_yellow",
-        width=50
-    )
-
-    submenu.add_column("Keuze", justify="center")
-    submenu.add_column("Actie")
-
-    submenu.add_row("1", "Zoek karaokevideo")
-    submenu.add_row("2", "Open YouTube-resultaten")
-    submenu.add_row("0", "Terug")
-
-    console.print(
-        Panel(
-            submenu,
-            title="[bold bright_white]KARAOKE[/bold bright_white]",
-            title_align="center",
-            border_style="bright_yellow",
-            width=50,
-        )
-
-    )
-
-elif keuze == "0":
-    console.print("[bold red]Programma afgesloten[/bold red]")
-
+        elif submenu_keuze == "0":
+            break
 
 
 
