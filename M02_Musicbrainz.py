@@ -463,6 +463,12 @@ def verwijder_favoriet():
     ) as bestand:
 
         favorieten = bestand.readlines()
+#bij foutieve keuze als er geen favorieten zijn, bestand is leeg
+    if len(favorieten) == 0:
+        console.print(
+            "[yellow]Geen favorieten gevonden.[/yellow]"
+        )
+        return
 
     for nummer, favoriet in enumerate(
             favorieten,
@@ -509,4 +515,7 @@ def verwijder_favoriet():
         )
     console.print(
         "[green]Favoriet verwijderd.[/green]"
+    )
+    console.input(
+        "\nDruk op Enter om verder te gaan..."
     )

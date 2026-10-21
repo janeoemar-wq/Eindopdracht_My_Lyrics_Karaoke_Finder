@@ -157,3 +157,24 @@ FAVORIETYN:
 Stap 1A - Favorietenbestand aanmaken txt
 Stap 1B - Testen
 Stap 1C - Functie aanroepen
+
+Hoofdmenu ombouwen op 21 okt van:
+Hoofdmenu
+↓
+2
+↓
+0
+↓
+Programma stopt
+                  NAAR:
+Hoofdmenu
+↓
+2
+↓
+Opgeslagen nummers
+↓
+0
+↓
+terug naar while
+↓
+Hoofdmenu opnieuw tonen

@@ -46,104 +46,64 @@ def toon_hoofdmenu():
         )
     )
 
-toon_hoofdmenu()
-#EINDE TOON HOOFDMENU
-
+#ombouwen van hoofdmenu naar centrale lus
 while True:
-    keuze = console.input("[bold]Maak een keuze (0-3):[/bold]").strip()
-    if keuze in ["0", "1", "2", "3"]:
-        break
-    console.print("[bold red]Ongeldige invoer! Kies 0, 1, 2, 3[/bold red]")
+
+    toon_hoofdmenu()
+
+    keuze = console.input(
+        "[bold]Maak een keuze (0-3):[/bold]"
+    ).strip()
+
+    if keuze not in ["0", "1", "2", "3"]:
+
+        console.print(
+            "[bold red]Ongeldige invoer! Kies 0, 1, 2, 3[/bold red]"
+        )
+
+        continue
 
 #keuze validatie(1,2,3, en 0)
 
-if keuze == "1":
-
-    submenu = Table(
-    border_style="bright_yellow",
-    width=45
-)
-
-    submenu.add_column("Keuze", justify="center")
-    submenu.add_column("Actie")
-
-    submenu.add_row("1", "Zoek artiest")
-    submenu.add_row("2", "Zoek nummer")
-    submenu.add_row("0", "Terug")
-    console.print(
-    Panel(
-    submenu,
-    title="[bold bright_white]MUZIEK & SONGTEKST[/bold bright_white]",
-    title_align="center",
-    border_style="bright_yellow",
-    width=50,
-    )
-    )
-
-    artiest_naam = console.input(
-        "\n[bold white]Voer artiestnaam in: [/bold white]"
-    )
-
-    actie = toon_artiesten(
-        artiest_naam
-    )
-
-    if actie == "hoofdmenu":
-        toon_hoofdmenu()
-
-elif keuze == "2":
-
-    while True:
-
-        console.clear()
+    if keuze == "1":
 
         submenu = Table(
-            border_style="bright_yellow",
-            width=50
-        )
+        border_style="bright_yellow",
+        width=45
+    )
 
         submenu.add_column("Keuze", justify="center")
         submenu.add_column("Actie")
 
-        submenu.add_row("1", "Favorieten bekijken")
-        submenu.add_row("2", "Favoriet verwijderen")
+        submenu.add_row("1", "Zoek artiest")
+        submenu.add_row("2", "Zoek nummer")
         submenu.add_row("0", "Terug")
-
         console.print(
-            Panel(
-                submenu,
-                title="[bold bright_white]OPGESLAGEN NUMMERS[/bold bright_white]",
-                title_align="center",
-                border_style="bright_yellow",
-                width=50,
-            )
+        Panel(
+        submenu,
+        title="[bold bright_white]MUZIEK & SONGTEKST[/bold bright_white]",
+        title_align="center",
+        border_style="bright_yellow",
+        width=50,
+        )
         )
 
-        submenu_keuze = console.input(
-            "\n[bold white]Maak een keuze (0-2): [/bold white]"
-        ).strip()
+        artiest_naam = console.input(
+            "\n[bold white]Voer artiestnaam in: [/bold white]"
+        )
 
-        if submenu_keuze == "1":
+        actie = toon_artiesten(
+            artiest_naam
+        )
 
-            toon_favorieten()
+        if actie == "hoofdmenu":
+            toon_hoofdmenu()
 
-            console.input(
-                "\nDruk op Enter om verder te gaan..."
-            )
+    elif keuze == "2":
 
+        while True:
 
-
-        elif submenu_keuze == "2":
-
-            verwijder_favoriet()
-
-
-
-        elif submenu_keuze == "0":
-
-            break
-
-        elif keuze == "3":
+            console.clear()
 
             submenu = Table(
                 border_style="bright_yellow",
@@ -153,23 +113,83 @@ elif keuze == "2":
             submenu.add_column("Keuze", justify="center")
             submenu.add_column("Actie")
 
-            submenu.add_row("1", "Zoek karaokevideo")
-            submenu.add_row("2", "Open YouTube-resultaten")
+            submenu.add_row("1", "Favorieten bekijken")
+            submenu.add_row("2", "Favoriet verwijderen")
             submenu.add_row("0", "Terug")
 
             console.print(
                 Panel(
                     submenu,
-                    title="[bold bright_white]KARAOKE[/bold bright_white]",
+                    title="[bold bright_white]OPGESLAGEN NUMMERS[/bold bright_white]",
                     title_align="center",
                     border_style="bright_yellow",
                     width=50,
                 )
-
             )
 
-        elif submenu_keuze == "0":
-            break
+            submenu_keuze = console.input(
+                "\n[bold white]Maak een keuze (0-2): [/bold white]"
+            ).strip()
+
+            if submenu_keuze == "1":
+
+                toon_favorieten()
+
+                console.input(
+                    "\nDruk op Enter om verder te gaan..."
+                )
+                continue
+
+
+
+
+            elif submenu_keuze == "2":
+
+                actie = verwijder_favoriet()
+
+                if actie == "hoofdmenu":
+                    break
+
+                continue
+
+
+
+            elif submenu_keuze == "0":
+
+                break
+
+    elif keuze == "3":
+
+        submenu = Table(
+            border_style="bright_yellow",
+            width=50
+        )
+
+        submenu.add_column("Keuze", justify="center")
+        submenu.add_column("Actie")
+
+        submenu.add_row("1", "Zoek karaokevideo")
+        submenu.add_row("2", "Open YouTube-resultaten")
+        submenu.add_row("0", "Terug")
+
+        console.print(
+            Panel(
+                submenu,
+                title="[bold bright_white]KARAOKE[/bold bright_white]",
+                title_align="center",
+                border_style="bright_yellow",
+                width=50,
+            )
+
+        )
+
+    elif keuze == "0":
+
+        console.print(
+            "[bold red]Programma afgesloten[/bold red]"
+        )
+
+        break
 
 
 
