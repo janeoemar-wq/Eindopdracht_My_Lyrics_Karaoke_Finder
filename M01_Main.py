@@ -103,6 +103,7 @@ while True:
                     "[yellow]Zoek nummer wordt later gebouwd[/yellow]"
                 )
                 continue
+
             else:
                 console.print(
                     "[red]Ongeldige keuze[/red]"
@@ -183,29 +184,49 @@ while True:
                 break
 
     elif keuze == "3":
-
-        submenu = Table(
-            border_style="bright_yellow",
-            width=50
-        )
-
-        submenu.add_column("Keuze", justify="center")
-        submenu.add_column("Actie")
-
-        submenu.add_row("1", "Zoek karaokevideo")
-        submenu.add_row("2", "Open YouTube-resultaten")
-        submenu.add_row("0", "Terug")
-
-        console.print(
-            Panel(
-                submenu,
-                title="[bold bright_white]KARAOKE[/bold bright_white]",
-                title_align="center",
+        while True:
+            submenu = Table(
                 border_style="bright_yellow",
-                width=50,
+                width=50
             )
 
-        )
+            submenu.add_column("Keuze", justify="center")
+            submenu.add_column("Actie")
+
+            submenu.add_row("1", "Zoek karaokevideo")
+            submenu.add_row("2", "Open YouTube-resultaten")
+            submenu.add_row("0", "Terug")
+
+            console.print(
+                Panel(
+                    submenu,
+                    title="[bold bright_white]KARAOKE[/bold bright_white]",
+                    title_align="center",
+                    border_style="bright_yellow",
+                    width=50,
+                )
+            )
+            submenu_keuze = console.input(
+                "\nMaak een keuze (0-2): "
+            ).strip()
+
+            if submenu_keuze == "0":
+
+                break
+            elif submenu_keuze == "1":
+
+                console.print(
+                    "[yellow]Zoek karaokevideo wordt later gebouwd[/yellow]"
+                )
+
+                continue
+            elif submenu_keuze == "2":
+
+                console.print(
+                    "[yellow]Open YouTube-resultaten wordt later gebouwd[/yellow]"
+                )
+
+                continue
 
     elif keuze == "0":
 

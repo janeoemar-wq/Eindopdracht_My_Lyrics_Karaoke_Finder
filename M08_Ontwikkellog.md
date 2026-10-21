@@ -181,3 +181,17 @@ Hoofdmenu opnieuw tonen
 
 ombouwen keuze 2
 ombouwen keuze 1
+
+Voor het bouwen van de functioanleit , rekeneninggehouden met advies docent:
+Voor je ontwikkellog kun je noteren
+
+Feedback docent:
+
+GO ontvangen op ontwerp.
+Ja-pad voor opslaan favoriet explicieter opnemen in flowchart.
+Opletten voor dubbele code tussen Functionaliteit 1 (songtekst zoeken) en Functionaliteit 3 (karaoke zoeken).
+Waar mogelijk functies hergebruiken.
+
+Mijn advies: die tip over dubbele code gaan we straks echt gebruiken wanneer we Karaoke bouwen. Dan kunnen we bestaande zoekfuncties hergebruiken in plaats van alles opnieuw te programmeren. Dat scoort meestal ook beter op het beoordelingspunt efficiënte code / functies gebruiken
+
+
