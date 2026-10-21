@@ -66,38 +66,62 @@ while True:
 #keuze validatie(1,2,3, en 0)
 
     if keuze == "1":
-
-        submenu = Table(
-        border_style="bright_yellow",
-        width=45
-    )
-
-        submenu.add_column("Keuze", justify="center")
-        submenu.add_column("Actie")
-
-        submenu.add_row("1", "Zoek artiest")
-        submenu.add_row("2", "Zoek nummer")
-        submenu.add_row("0", "Terug")
-        console.print(
-        Panel(
-        submenu,
-        title="[bold bright_white]MUZIEK & SONGTEKST[/bold bright_white]",
-        title_align="center",
-        border_style="bright_yellow",
-        width=50,
-        )
+        while True:
+            submenu = Table(
+            border_style="bright_yellow",
+            width=45
         )
 
-        artiest_naam = console.input(
-            "\n[bold white]Voer artiestnaam in: [/bold white]"
-        )
+            submenu.add_column("Keuze", justify="center")
+            submenu.add_column("Actie")
 
-        actie = toon_artiesten(
-            artiest_naam
-        )
+            submenu.add_row("1", "Zoek artiest")
+            submenu.add_row("2", "Zoek nummer")
+            submenu.add_row("0", "Terug")
+            console.print(
+            Panel(
+            submenu,
+            title="[bold bright_white]MUZIEK & SONGTEKST[/bold bright_white]",
+            title_align="center",
+            border_style="bright_yellow",
+            width=50,
+            )
+            )
+            submenu_keuze = console.input(
+                "\nMaak een keuze (0-2): "
+            ).strip()
 
-        if actie == "hoofdmenu":
-            toon_hoofdmenu()
+            if submenu_keuze == "0":
+                break
+
+            if submenu_keuze == "1":
+                artiest_naam = console.input(
+                        "\n[bold white]Voer artiestnaam in (0 = Terug, S = Hoofdmenu): [/bold white]"
+                )
+            elif submenu_keuze == "2":
+                console.print(
+                    "[yellow]Zoek nummer wordt later gebouwd[/yellow]"
+                )
+                continue
+            else:
+                console.print(
+                    "[red]Ongeldige keuze[/red]"
+                )
+                continue
+
+                if artiest_naam == "0":
+                    break
+
+                if artiest_naam.upper() == "S":
+                    break
+
+                actie = toon_artiesten(
+                    artiest_naam
+                )
+
+                if actie == "hoofdmenu":
+                    continue #hiermee kom je weer in het hoofdmenu
+
 
     elif keuze == "2":
 

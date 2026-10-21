@@ -178,3 +178,6 @@ Opgeslagen nummers
 terug naar while
 ↓
 Hoofdmenu opnieuw tonen
+
+ombouwen keuze 2
+ombouwen keuze 1
