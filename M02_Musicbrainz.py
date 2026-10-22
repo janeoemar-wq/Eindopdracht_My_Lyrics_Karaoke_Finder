@@ -6,7 +6,6 @@ Type: width=10
 Beschrijving: max_width=35
 no_wrap=True
 overflow="ellipsis"
-
 Columns(..., equal=True, expand=False)
 Panel width=160
 
@@ -21,7 +20,6 @@ midden = (len(artiesten) + 1) // 2
 import musicbrainzngs
 from M00_Imports import *
 from M04_Config import EMAIL
-from M10_Helpersfunctie import haal_data_op
 from rich.columns import Columns
 from M10_Helpersfunctie import (
     haal_data_op,
@@ -79,17 +77,7 @@ def toon_artiesten(artiest_naam):
         return
 
 
-#1Tabel: opmaken zodat het resultaat netjes verwerkt wordt
-#Rich tabel leeg tabel aanmaken en opmaken
-        linker_tabel = Table(
-        border_style="bright_yellow",
-        )
-        rechter_tabel = Table(
-        border_style="bright_yellow",
-        )
-
-
-# 2 Kolommen: in tabel voor headers van bovenstaanse tabel aanmaken (headers)
+#Linker tabel aanmaken en opmaken:deze tabel toont de eerste helft van de gevonden artiesten.
     linker_tabel = Table(
         border_style="bright_yellow",
         expand=True
@@ -120,7 +108,7 @@ def toon_artiesten(artiest_naam):
         overflow="ellipsis"
     )
 
-#3 rijen: eerste 10 artiesten toevoegen
+#Verdeel de resultaten gelijkmatig over de linker- en rechtertabel.
 #enumerate=voeg automatisch nummers toe,begin bij 1
     midden = (len(artiesten) + 1) // 2
     for nummer, artiest_musicbrainz in enumerate(
@@ -145,7 +133,7 @@ def toon_artiesten(artiest_naam):
             artiest_musicbrainz.get("disambiguation", "-")
         )
 
-
+    # Toon beide tabellen naast elkaar in één panel.
     console.print(
         Panel(
             Columns(
@@ -267,7 +255,7 @@ def toon_nummers_van_artiest(
             no_wrap=True,
             overflow="ellipsis"
         )
-#BEGIN RECHTER TABEL------------------------------
+#BEGIN RECHTER TABEL: Rechter tabel aanmaken en opmaken. Deze tabel toont de tweede helft van de gevonden artiesten.
         rechter_tabel = Table(
             border_style="bright_yellow",
             expand=True

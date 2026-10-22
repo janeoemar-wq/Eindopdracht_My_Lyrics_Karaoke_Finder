@@ -2,12 +2,8 @@ from M00_Imports import *
 from M02_Musicbrainz import toon_artiesten, toon_favorieten, verwijder_favoriet
 from M03_Karaoke import toon_karaoke_menu
 from M10_Helpersfunctie import (
-    vraag_artiest_en_titel,
     maak_menu_tabel
 )
-import requests
-import webbrowser
-from urllib.parse import quote_plus
 
 # begin LOGO
 console.print(
