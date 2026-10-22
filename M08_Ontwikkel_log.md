@@ -112,7 +112,7 @@ title_align="center"
 border_style="bright_yellow"
 width=160
 
-Verdeling links/rechts: midden = (len(resultaten) + 1) // 2
+Verdeling links/rechts: midden = (len(artiesten) + 1) // 2
 daardoor:
 Linker en rechter tabel even breed
 Tabellen verdeeld over de volledige panelbreedte

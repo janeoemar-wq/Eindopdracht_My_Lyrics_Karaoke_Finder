@@ -1,3 +1,22 @@
+"""
+Opmaak artiestentabel
+Nr: width=3
+Naam: width=10
+Type: width=10
+Beschrijving: max_width=35
+no_wrap=True
+overflow="ellipsis"
+
+Columns(..., equal=True, expand=False)
+Panel width=160
+
+Verdeling:
+midden = (len(artiesten) + 1) // 2
+6 resultaten = 3/3
+7 resultaten = 4/3
+8 resultaten = 4/4
+10 resultaten = 5/5
+"""
 
 import musicbrainzngs
 from M00_Imports import *
@@ -47,6 +66,7 @@ def toon_artiesten(artiest_naam):
         if artiest.get("name", "").lower() == artiest_naam.lower()
     ]
 
+    console.print()
 
 
 #len = tel hoeveel artiesten er zijn, als er geen artiest gevonden is, print in rood
@@ -71,20 +91,34 @@ def toon_artiesten(artiest_naam):
 
 # 2 Kolommen: in tabel voor headers van bovenstaanse tabel aanmaken (headers)
     linker_tabel = Table(
-        border_style="bright_yellow"
+        border_style="bright_yellow",
+        expand=True
     )
+
     linker_tabel.add_column("Nr", width=3)
     linker_tabel.add_column("Naam", width=10)
     linker_tabel.add_column("Type", width=10)
-    linker_tabel.add_column("Beschrijving", max_width=35)
+    linker_tabel.add_column(
+        "Beschrijving",
+        max_width=35,
+        no_wrap=True,
+        overflow="ellipsis"
+    )
 
     rechter_tabel = Table(
-        border_style="bright_yellow"
+        border_style="bright_yellow",
+        expand=True
     )
+
     rechter_tabel.add_column("Nr", width=3)
     rechter_tabel.add_column("Naam", width=10)
     rechter_tabel.add_column("Type", width=10)
-    rechter_tabel.add_column("Beschrijving", max_width=35)
+    rechter_tabel.add_column(
+        "Beschrijving",
+        max_width=35,
+        no_wrap=True,
+        overflow="ellipsis"
+    )
 
 #3 rijen: eerste 10 artiesten toevoegen
 #enumerate=voeg automatisch nummers toe,begin bij 1
@@ -117,7 +151,7 @@ def toon_artiesten(artiest_naam):
             Columns(
                 [linker_tabel, rechter_tabel],
                 equal=True,
-                expand=True
+                expand=False
 
             ),
             title=f"[bold bright_white]RESULTATEN VOOR {artiest_naam.upper()}[/bold bright_white]",
@@ -126,6 +160,10 @@ def toon_artiesten(artiest_naam):
             width=160,
         )
     )
+    console.print(
+        f"[bright_yellow]Aantal gevonden artiesten: {len(artiesten)}[/bright_yellow]"
+    )
+
     console.print()
 
     console.print("1-20 = Artiest kiezen")
@@ -221,9 +259,13 @@ def toon_nummers_van_artiest(
             width=3,
             justify="center"
         )
+
+
         linker_tabel.add_column(
             "Titel",
-            max_width=35
+            max_width=35,
+            no_wrap=True,
+            overflow="ellipsis"
         )
 #BEGIN RECHTER TABEL------------------------------
         rechter_tabel = Table(
@@ -235,9 +277,13 @@ def toon_nummers_van_artiest(
             width=3,
             justify="center"
         )
+
+
         rechter_tabel.add_column(
             "Titel",
-            max_width=35
+            max_width=35,
+            no_wrap=True,
+            overflow="ellipsis"
         )
 #EINDE RECHTER TABEL------------------------------
         start = pagina * 20
@@ -425,35 +471,58 @@ def toon_favorieten():
             )
             return
 
-        tabel = Table(
+        linker_tabel = Table(
             border_style="bright_yellow"
         )
 
-        tabel.add_column(
-            "Nr",
-            width=5
-        )
-
-        tabel.add_column(
+        linker_tabel.add_column("Nr", width=5)
+        linker_tabel.add_column(
             "Favoriet",
-            width=100
+            max_width=40,
+            no_wrap=True,
+            overflow="ellipsis"
         )
 
+        rechter_tabel = Table(
+            border_style="bright_yellow"
+        )
+
+        rechter_tabel.add_column("Nr", width=5)
+        rechter_tabel.add_column(
+            "Favoriet",
+            max_width=40,
+            no_wrap=True,
+            overflow="ellipsis"
+        )
+
+        midden = (len(favorieten) + 1) // 2
         for nummer, favoriet in enumerate(
-                favorieten,
+                favorieten[:midden],
                 start=1
         ):
-
-            tabel.add_row(
+            linker_tabel.add_row(
                 str(nummer),
                 f"[cyan]{favoriet.strip()}[/cyan]"
             )
 
+        for nummer, favoriet in enumerate(
+                favorieten[midden:],
+                start=midden + 1
+        ):
+            rechter_tabel.add_row(
+                str(nummer),
+                f"[cyan]{favoriet.strip()}[/cyan]"
+            )
         console.print(
             Panel(
-                tabel,
+                Columns(
+                    [linker_tabel, rechter_tabel],
+                    equal=True,
+                    expand=False
+                ),
                 title="[bold bright_white]OPGESLAGEN NUMMERS[/bold bright_white]",
-                border_style="bright_yellow"
+                border_style="bright_yellow",
+                width=160
             )
         )
 

@@ -1,6 +1,10 @@
 from M00_Imports import *
 from M02_Musicbrainz import toon_artiesten, toon_favorieten, verwijder_favoriet
 from M03_Karaoke import toon_karaoke_menu
+from M10_Helpersfunctie import (
+    vraag_artiest_en_titel,
+    maak_menu_tabel
+)
 import requests
 import webbrowser
 from urllib.parse import quote_plus
@@ -23,13 +27,7 @@ console.print()
 
 #begin hoofmenu
 def toon_hoofdmenu():
-    tabel = Table(
-        border_style="bright_yellow",
-        width=45
-    )
-
-    tabel.add_column("Keuze", justify="center")
-    tabel.add_column("Actie")
+    tabel = maak_menu_tabel(45)
 
     tabel.add_row("1", "Muziek en songtekst zoeken")
     tabel.add_row("2", "Favorieten bekijken")
@@ -67,17 +65,12 @@ while True:
 
     if keuze == "1":
         while True:
-            submenu = Table(
-            border_style="bright_yellow",
-            width=45
-        )
-
-            submenu.add_column("Keuze", justify="center")
-            submenu.add_column("Actie")
+            submenu = maak_menu_tabel(45)
 
             submenu.add_row("1", "Zoek artiest")
             submenu.add_row("2", "Zoek nummer")
             submenu.add_row("0", "Terug")
+
             console.print(
             Panel(
             submenu,
@@ -130,14 +123,7 @@ while True:
         while True:
 
             console.clear()
-
-            submenu = Table(
-                border_style="bright_yellow",
-                width=50
-            )
-
-            submenu.add_column("Keuze", justify="center")
-            submenu.add_column("Actie")
+            submenu = maak_menu_tabel(50)
 
             submenu.add_row("1", "Favorieten bekijken")
             submenu.add_row("2", "Favoriet verwijderen")

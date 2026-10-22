@@ -31,3 +31,21 @@ def toon_foutmelding(tekst):
         )
     )
 
+# voor de tabellen en panels gebruik ik dezelfde opmaak
+def maak_menu_tabel(breedte=50):
+
+    tabel = Table(
+        border_style="bright_yellow",
+        width=breedte
+    )
+
+    tabel.add_column(
+        "Keuze",
+        justify="center"
+    )
+
+    tabel.add_column(
+        "Actie"
+    )
+
+    return tabel

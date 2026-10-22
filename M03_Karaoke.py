@@ -1,12 +1,12 @@
 from M00_Imports import *
-from M10_Helpersfunctie import vraag_artiest_en_titel
+from M10_Helpersfunctie import (
+    vraag_artiest_en_titel,
+    maak_menu_tabel
+)
 
 def toon_karaoke_menu():
     while True:
-        submenu = Table(
-            border_style="bright_yellow",
-            width=50
-        )
+        submenu = maak_menu_tabel(50)
 
         submenu.add_column("Keuze", justify="center")
         submenu.add_column("Actie")
