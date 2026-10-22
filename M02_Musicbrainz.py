@@ -170,7 +170,7 @@ def toon_artiesten(artiest_naam):
         keuze = int(keuze)
 
         if keuze < 1 or keuze > 10:
-# Gebruik centrale foutmelding (toon_melding) voor consistente opmaak
+# Gebruik centrale foutmelding voor consistente opmaak
             toon_foutmelding(
                 "Ongeldige keuze"
             )
