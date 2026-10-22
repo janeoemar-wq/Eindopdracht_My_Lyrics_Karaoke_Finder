@@ -2,8 +2,12 @@
 import musicbrainzngs
 from M00_Imports import *
 from M04_Config import EMAIL
+from M10_Helpersfunctie import haal_data_op
 from rich.columns import Columns
-
+from M10_Helpersfunctie import (
+    haal_data_op,
+    toon_foutmelding
+)
 
 #API identificatie instellen
 musicbrainzngs.set_useragent(
@@ -47,10 +51,12 @@ def toon_artiesten(artiest_naam):
 
 #len = tel hoeveel artiesten er zijn, als er geen artiest gevonden is, print in rood
     if len(artiesten) == 0:
-        console.print(
-            "[bold red]Geen artiesten gevonden.[/bold red]"
+# Gebruik centrale foutmelding voor consistente opmaak
+        toon_foutmelding(
+            "Geen artiesten gevonden."
         )
-        return # FUNCTIE def toon_artiesten STOPPEN, onderstaande tabel wordt niet gemaakt.
+# FUNCTIE def toon_artiesten met reurn STOPPEN, onderstaande tabel wordt niet gemaakt.
+        return
 
 
 #1Tabel: opmaken zodat het resultaat netjes verwerkt wordt
@@ -164,8 +170,9 @@ def toon_artiesten(artiest_naam):
         keuze = int(keuze)
 
         if keuze < 1 or keuze > 10:
-            console.print(
-                "[red]Ongeldige keuze[/red]"
+# Gebruik centrale foutmelding (toon_melding) voor consistente opmaak
+            toon_foutmelding(
+                "Ongeldige keuze"
             )
             return
 
@@ -339,10 +346,16 @@ def toon_songtekst(
     )
 
     try:
+# Ik gebruik de hulpfunctie uit M10, zodat alle API-aanvragen en foutafhandeling op één centrale plek staan.
+        data = haal_data_op(url)
 
-        response = requests.get(url)
+# Stop de functie als de API geen gegevens terugstuurt
+        if data is None:
+            console.print(
+                "[bold red]Fout bij ophalen van de songtekst.[/bold red]"
+            )
 
-        data = response.json()
+            return
 
         songtekst = data.get(
             "lyrics",
