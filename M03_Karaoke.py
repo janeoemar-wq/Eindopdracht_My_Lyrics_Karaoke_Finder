@@ -69,11 +69,28 @@ def toon_karaoke_menu():
             )
 
             continue
-# SUB MENU KEUZE 2
+
+# SUB MENU KEUZE 2: zoek alle karaoke resulaten van een artiest
+#Artiest + titel + karaoke
         elif submenu_keuze == "2":
 
+            artiest = console.input(
+                "Artiest: "
+            ).strip()
+
+            youtube_url = (
+                    "https://www.youtube.com/results?search_query="
+                    + quote_plus(f"{artiest} karaoke")
+            )
+
+            webbrowser.open(youtube_url)
+
             console.print(
-                "[yellow]Open YouTube-resultaten wordt later gebouwd[/yellow]"
+                Panel(
+                    f"Karaoke-resultaten geopend voor:\n{artiest}",
+                    title="YouTube",
+                    border_style="green"
+                )
             )
 
             continue
