@@ -1,11 +1,9 @@
 
 import musicbrainzngs
-import requests
-from rich.console import Console
+from M00_Imports import *
 from M04_Config import EMAIL
-from rich.table import Table
-from rich.panel import Panel
 from rich.columns import Columns
+
 
 #API identificatie instellen
 musicbrainzngs.set_useragent(
@@ -14,7 +12,6 @@ musicbrainzngs.set_useragent(
     EMAIL
 )
 
-console = Console()
 #Stuur de ingevoerde artiestnaam naar MusicBrainz.
 def zoek_artiest(artiest_naam):
     try:
@@ -73,7 +70,7 @@ def toon_artiesten(artiest_naam):
     linker_tabel.add_column("Nr", width=3)
     linker_tabel.add_column("Naam", width=10)
     linker_tabel.add_column("Type", width=10)
-    linker_tabel.add_column("Beschrijving", max_width=45)
+    linker_tabel.add_column("Beschrijving", max_width=35)
 
     rechter_tabel = Table(
         border_style="bright_yellow"
@@ -81,7 +78,7 @@ def toon_artiesten(artiest_naam):
     rechter_tabel.add_column("Nr", width=3)
     rechter_tabel.add_column("Naam", width=10)
     rechter_tabel.add_column("Type", width=10)
-    rechter_tabel.add_column("Beschrijving", max_width=45)
+    rechter_tabel.add_column("Beschrijving", max_width=35)
 
 #3 rijen: eerste 10 artiesten toevoegen
 #enumerate=voeg automatisch nummers toe,begin bij 1
@@ -383,7 +380,7 @@ def sla_favoriet_op(
         songtitel
 ):
     with open(
-            "M09_favorieten.txt",
+            "M09_Favorieten.txt",
             "a",
             encoding="utf-8"
     ) as bestand:
@@ -401,7 +398,7 @@ def toon_favorieten():
     try:
 
         with open(
-                "M09_favorieten.txt",
+                "M09_Favorieten.txt",
                 "r",
                 encoding="utf-8"
         ) as bestand:
@@ -457,7 +454,7 @@ def toon_favorieten():
 def verwijder_favoriet():
 
     with open(
-            "M09_favorieten.txt",
+            "M09_Favorieten.txt",
             "r",
             encoding="utf-8"
     ) as bestand:
@@ -506,7 +503,7 @@ def verwijder_favoriet():
 
     del favorieten[keuze - 1]
     with open(
-            "M09_favorieten.txt",
+            "M09_Favorieten.txt",
             "w",
             encoding="utf-8"
     ) as bestand:

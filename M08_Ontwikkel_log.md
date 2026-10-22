@@ -194,4 +194,10 @@ Waar mogelijk functies hergebruiken.
 
 Mijn advies: die tip over dubbele code gaan we straks echt gebruiken wanneer we Karaoke bouwen. Dan kunnen we bestaande zoekfuncties hergebruiken in plaats van alles opnieuw te programmeren. Dat scoort meestal ook beter op het beoordelingspunt efficiënte code / functies gebruiken
 
-
+22 oktober:
+✅ Hernoem bestanden
+✅ Laat programma weer starten
+✅ Vul M00_Imports.py
+✅ Maak M10_Helpers.py
+✅ Verplaats dubbele code naar helperfuncties
+✅ Daarna verder met de karaokefunctie
