@@ -4,7 +4,6 @@ from M03_Karaoke import toon_karaoke_menu
 from M10_Helpersfunctie import (
     maak_menu_tabel
 )
-
 # begin LOGO
 console.print(
     Panel(

@@ -10,7 +10,7 @@ Columns(..., equal=True, expand=False)
 Panel width=160
 
 Verdeling:
-midden = (len(artiesten) + 1) // 2
+midden = (len(pagina_artiesten) + 1) // 2
 6 resultaten = 3/3
 7 resultaten = 4/3
 8 resultaten = 4/4
@@ -34,7 +34,9 @@ musicbrainzngs.set_useragent(
 )
 
 #Stuur de ingevoerde artiestnaam naar MusicBrainz.
-def zoek_artiest(artiest_naam):
+#dict = de functie geeft normaal een dictionary terug (resultaat)
+#None = bij een fout geeft de functie None terug
+def zoek_artiest(artiest_naam) -> dict | None:
     try:
         resultaat = musicbrainzngs.search_artists(
             artiest_naam
@@ -55,18 +57,12 @@ def toon_artiesten(artiest_naam):
         artiest_naam
     )
     if resultaat is None:
-        return
+        return None
+    artiesten = resultaat["artist-list"]
+
 #Haal de lijst met gevonden artiesten uit het resultaat.
 #Zoekresultaten artiesten gefilterd op exacte artiestnaam
-    artiesten = [
-        artiest
-        for artiest in resultaat["artist-list"]
-        if artiest.get("name", "").lower() == artiest_naam.lower()
-    ]
-
     console.print()
-
-
 #len = tel hoeveel artiesten er zijn, als er geen artiest gevonden is, print in rood
     if len(artiesten) == 0:
 # Gebruik centrale foutmelding voor consistente opmaak
@@ -74,153 +70,145 @@ def toon_artiesten(artiest_naam):
             "Geen artiesten gevonden."
         )
 # FUNCTIE def toon_artiesten met reurn STOPPEN, onderstaande tabel wordt niet gemaakt.
-        return
+        return None
+    pagina = 0
+
+    while True:
+        per_pagina = 20
+
+        start = pagina * per_pagina
+        einde = start + per_pagina
+
+        pagina_artiesten = artiesten[start:einde]
 
 
 #Linker tabel aanmaken en opmaken:deze tabel toont de eerste helft van de gevonden artiesten.
-    linker_tabel = Table(
-        border_style="bright_yellow",
-        expand=True
-    )
+        linker_tabel = Table(
+            border_style="bright_yellow",
+            expand=True
+        )
 
-    linker_tabel.add_column("Nr", width=3)
-    linker_tabel.add_column("Naam", width=10)
-    linker_tabel.add_column("Type", width=10)
-    linker_tabel.add_column(
-        "Beschrijving",
-        max_width=35,
-        no_wrap=True,
-        overflow="ellipsis"
-    )
+        linker_tabel.add_column("Nr", width=3)
+        linker_tabel.add_column("Naam", width=10)
+        linker_tabel.add_column("Type", width=10)
+        linker_tabel.add_column(
+            "Beschrijving",
+            max_width=35,
+            no_wrap=True,
+            overflow="ellipsis"
+        )
 
-    rechter_tabel = Table(
-        border_style="bright_yellow",
-        expand=True
-    )
+        rechter_tabel = Table(
+            border_style="bright_yellow",
+            expand=True
+        )
 
-    rechter_tabel.add_column("Nr", width=3)
-    rechter_tabel.add_column("Naam", width=10)
-    rechter_tabel.add_column("Type", width=10)
-    rechter_tabel.add_column(
-        "Beschrijving",
-        max_width=35,
-        no_wrap=True,
-        overflow="ellipsis"
-    )
+        rechter_tabel.add_column("Nr", width=3)
+        rechter_tabel.add_column("Naam", width=10)
+        rechter_tabel.add_column("Type", width=10)
+        rechter_tabel.add_column(
+            "Beschrijving",
+            max_width=35,
+            no_wrap=True,
+            overflow="ellipsis"
+        )
 
 #Verdeel de resultaten gelijkmatig over de linker- en rechtertabel.
 #enumerate=voeg automatisch nummers toe,begin bij 1
-    midden = (len(artiesten) + 1) // 2
-    for nummer, artiest_musicbrainz in enumerate(
-            artiesten[:midden],
-            start=1
-    ):
-        linker_tabel.add_row(
-            str(nummer),
-            artiest_musicbrainz.get("name", "-"),
-            artiest_musicbrainz.get("type", "-"),
-            artiest_musicbrainz.get("disambiguation", "-")
-        )
+        midden = (len(pagina_artiesten) + 1) // 2
+        for nummer, artiest_musicbrainz in enumerate(
+                pagina_artiesten[:midden],
+                start=1
+        ):
+            linker_tabel.add_row(
+                str(nummer),
+                artiest_musicbrainz.get("name", "-"),
+                artiest_musicbrainz.get("type", "-"),
+                artiest_musicbrainz.get("disambiguation", "-")
+            )
 
-    for nummer, artiest_musicbrainz in enumerate(
-            artiesten[midden:],
-            start=midden + 1
-    ):
-        rechter_tabel.add_row(
-            str(nummer),
-            artiest_musicbrainz.get("name", "-"),
-            artiest_musicbrainz.get("type", "-"),
-            artiest_musicbrainz.get("disambiguation", "-")
-        )
+        for nummer, artiest_musicbrainz in enumerate(
+                pagina_artiesten[midden:],
+                start=midden + 1
+        ):
+            rechter_tabel.add_row(
+                str(nummer),
+                artiest_musicbrainz.get("name", "-"),
+                artiest_musicbrainz.get("type", "-"),
+                artiest_musicbrainz.get("disambiguation", "-")
+            )
 
-    # Toon beide tabellen naast elkaar in één panel.
-    console.print(
-        Panel(
-            Columns(
-                [linker_tabel, rechter_tabel],
-                equal=True,
-                expand=False
-
-            ),
-            title=f"[bold bright_white]RESULTATEN VOOR {artiest_naam.upper()}[/bold bright_white]",
-            title_align="center",
-            border_style="bright_yellow",
-            width=160,
-        )
-    )
-    console.print(
-        f"[bright_yellow]Aantal gevonden artiesten: {len(artiesten)}[/bright_yellow]"
-    )
-
-    console.print()
-
-    console.print("1-20 = Artiest kiezen")
-    console.print("N    = Volgende artiesten")
-    console.print("V    = Vorige artiesten")
-    console.print("0    = Terug")
-    console.print("S    = Hoofdmenu")
-
-#Vraag de gebruiker te maken:1-10 = Artiest kiezen
-# N    = Volgende artiesten
-# V    = Vorige artiesten
-# 0    = Terug
-# S    = Hoofdmenu
-    keuze = console.input(
-        "\nMaak keuze: "
-    )
-#keuze maken
-    if keuze.upper() == "N":
+# Toon beide tabellen naast elkaar in één panel.
         console.print(
-            "[yellow]Volgende pagina nog bouwen[/yellow]"
-        )
-        return
+            Panel(
+                Columns(
+                    [linker_tabel, rechter_tabel],
+                    equal=True,
+                    expand=False
 
-    elif keuze.upper() == "V":
+                ),
+                title=f"[bold bright_white]RESULTATEN VOOR {artiest_naam.upper()}[/bold bright_white]",
+                title_align="center",
+                border_style="bright_yellow",
+                width=160,
+            )
+        )
         console.print(
-            "[yellow]Vorige pagina nog bouwen[/yellow]"
+            f"[bright_yellow]Aantal gevonden artiesten: {len(artiesten)}[/bright_yellow]"
         )
-        return
 
+        console.print()
 
-    elif keuze.upper() == "S":
+        console.print("1-20 = Artiest kiezen")
+        console.print("N    = Volgende artiesten")
+        console.print("V    = Vorige artiesten")
+        console.print("0    = Terug")
+        console.print("S    = Hoofdmenu")
 
-        return "hoofdmenu"
-
-
-    elif keuze == "0":
-
-        return "terug"
-
-    elif keuze.isdigit():
-
-        keuze = int(keuze)
-
-        if keuze < 1 or keuze > 10:
-# Gebruik centrale foutmelding voor consistente opmaak
+    #Vraag de gebruiker te maken:1-10 = Artiest kiezen
+    # N    = Volgende artiesten
+    # V    = Vorige artiesten
+    # 0    = Terug
+    # S    = Hoofdmenu
+        keuze = console.input(
+            "\nMaak keuze: "
+        )
+    #keuze maken
+        if keuze.upper() == "N":
+            console.print(
+                "[yellow]Volgende pagina nog bouwen[/yellow]"
+            )
+            return None
+        elif keuze.upper() == "V":
+            console.print(
+                "[yellow]Vorige pagina nog bouwen[/yellow]"
+            )
+            return None
+        elif keuze.upper() == "S":
+            return "hoofdmenu"
+        elif keuze.isdigit():
+            keuze = int(keuze)
+            if keuze < 1 or keuze > 10:
+                toon_foutmelding(
+                    "Ongeldige keuze"
+                )
+                return None
+            gekozen_artiest = artiesten[keuze - 1]
+            artiest_naam = gekozen_artiest["name"]
+            artist_id = gekozen_artiest["id"]
+            artiest, songtitel = toon_nummers_van_artiest(
+                artist_id, artiest_naam)
+            if artiest is None:
+                return None
+            toon_songtekst(
+                artiest,
+                songtitel
+            )
+        else:
             toon_foutmelding(
                 "Ongeldige keuze"
             )
-            return
-
-        gekozen_artiest = artiesten[keuze - 1]
-
-        artiest_naam = gekozen_artiest["name"]
-        artist_id = gekozen_artiest["id"]
-
-        artiest, songtitel = toon_nummers_van_artiest(
-            artist_id,
-            artiest_naam
-        )
-        if artiest is None:
-            return
-        toon_songtekst(
-            artiest,
-            songtitel
-        )
-    else:
-        console.print(
-            "[red]Ongeldige keuze[/red]"
-        )
+    return None
 
 def toon_nummers_van_artiest(
         artist_id,
@@ -235,7 +223,6 @@ def toon_nummers_van_artiest(
     works = resultaat["artist"]["work-list"]
 
     pagina = 0
-
     while True:
 #LINKER TABEL-----------------------------------
         linker_tabel = Table(
@@ -368,8 +355,9 @@ def toon_nummers_van_artiest(
         else:
 
             console.print(
-                "[red]Ongeldige keuze[/red]"
-            )
+                "[red]Ongeldige keuze[/red]")
+
+    return None, None
 def toon_songtekst(
         artiest_naam,
         songtitel
@@ -389,7 +377,7 @@ def toon_songtekst(
                 "[bold red]Fout bij ophalen van de songtekst.[/bold red]"
             )
 
-            return
+            return None
 
         songtekst = data.get(
             "lyrics",
@@ -457,7 +445,7 @@ def toon_favorieten():
             console.print(
                 "[yellow]Geen favorieten gevonden.[/yellow]"
             )
-            return
+            return None
 
         linker_tabel = Table(
             border_style="bright_yellow"
@@ -535,7 +523,7 @@ def verwijder_favoriet():
         console.print(
             "[yellow]Geen favorieten gevonden.[/yellow]"
         )
-        return
+        return None
 
     for nummer, favoriet in enumerate(
             favorieten,
@@ -550,7 +538,7 @@ def verwijder_favoriet():
     ).upper()
 
     if keuze == "0":
-        return
+        return None
     if keuze == "S":
         return "hoofdmenu"
     try:
@@ -562,14 +550,14 @@ def verwijder_favoriet():
         console.print(
             "[red]Voer een nummer in[/red]"
         )
-        return
+        return None
 
 #controle foutieve keuze
     if keuze < 1 or keuze > len(favorieten):
         console.print(
             "[red]Ongeldig nummer[/red]"
         )
-        return
+        return None
 
     del favorieten[keuze - 1]
     with open(
