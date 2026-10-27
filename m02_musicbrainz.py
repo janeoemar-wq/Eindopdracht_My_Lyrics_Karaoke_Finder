@@ -635,6 +635,24 @@ def verwijder_favoriet():
     )
     return None
 
+def zoek_nummer(songtitel) -> dict | None:
+
+    try:
+
+        resultaat = musicbrainzngs.search_recordings(
+            recording=songtitel
+        )
+
+        return resultaat
+
+    except Exception as fout:
+
+        console.print(
+            f"[bold red]Fout:[/bold red] {fout}"
+        )
+
+        return None
+
 def zoek_nummer_menu():
 
     songtitel = console.input(
@@ -678,16 +696,36 @@ def zoek_nummer_menu():
         "Titel",
         overflow="ellipsis"
     )
+
+    tabel.add_column(
+        "Artiest",
+        overflow="ellipsis"
+    )
+
     for nummer, opname in enumerate(
             nummers[:10],
             start=1
     ):
+        artiest_lijst = opname.get(
+            "artist-credit",
+            []
+        )
+
+        artiest_naam = "-"
+
+        if len(artiest_lijst) > 0:
+            artiest_naam = artiest_lijst[0].get(
+                "name",
+                "-"
+            )
+
         tabel.add_row(
             str(nummer),
             opname.get(
                 "title",
                 "-"
-            )
+            ),
+            artiest_naam
         )
     console.print(
         Panel(
@@ -696,9 +734,55 @@ def zoek_nummer_menu():
             border_style="bright_yellow"
         )
     )
-    console.input(
-        "\nDruk op Enter om verder te gaan..."
+    console.print()
+
+    console.print("1-10 = Nummer kiezen")
+    console.print("0    = Terug")
+
+    keuze = console.input(
+        "\nMaak keuze: "
     )
+
+    if keuze == "0":
+        return None
+    if not keuze.isdigit():
+        toon_foutmelding(
+            "Ongeldige keuze"
+        )
+
+        return None
+    keuze = int(keuze)
+    if keuze < 1 or keuze > 10:
+        toon_foutmelding(
+            "Ongeldige keuze"
+        )
+
+        return None
+    gekozen_nummer = nummers[
+        keuze - 1
+        ]
+    songtitel = gekozen_nummer.get(
+        "title",
+        "-"
+    )
+    artiest_lijst = gekozen_nummer.get(
+        "artist-credit",
+        []
+    )
+    if len(artiest_lijst) == 0:
+        toon_foutmelding(
+            "Geen artiest gevonden."
+        )
+        return None
+    artiest_naam = artiest_lijst[0].get(
+        "name",
+        "-"
+    )
+    toon_songtekst(
+        artiest_naam,
+        songtitel
+    )
+
     return None
 
 def toon_muziek_menu():
@@ -813,21 +897,3 @@ def toon_favorieten_menu():
                 break
 
             continue
-
-def zoek_nummer(songtitel) -> dict | None:
-
-    try:
-
-        resultaat = musicbrainzngs.search_recordings(
-            recording=songtitel
-        )
-
-        return resultaat
-
-    except Exception as fout:
-
-        console.print(
-            f"[bold red]Fout:[/bold red] {fout}"
-        )
-
-        return None
