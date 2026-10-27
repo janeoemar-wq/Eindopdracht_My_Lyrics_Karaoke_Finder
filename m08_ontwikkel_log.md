@@ -234,16 +234,30 @@ Invoerscherm voor artiesten aangepast naar een duidelijkere opmaak met aparte na
 Voer artiestnaam in:
 Zoekresultaten van artiesten verdeeld over pagina's voor een betere leesbaarheid.
 Paginering toegevoegd met opties voor volgende en vorige pagina.
-Informatie toegevoegd over:
+
+Extra gebruikersinformatie toegevoegd:
 totaal aantal gevonden resultaten;
 aantal getoonde resultaten;
 huidige pagina.
-Resultaten overzichtelijk weergegeven in twee kolommen.
+
+
+Zoekresultaten overzichtelijk weergegeven in twee kolommen om meer gegevens tegelijk zichtbaar te maken.
+
 Navigatieteksten verduidelijkt met beschrijvingen zoals:
 1-10 = Artiest kiezen op deze pagina
 1-20 = Nummer kiezen op deze pagina
 Dubbele codeblokken en foutieve inspringingen verwijderd tijdens het opschonen van m01_main.py.
 Menustructuur gecontroleerd en hersteld zodat submenu's correct terugkeren naar het juiste scherm.
+
+Functie Zoek nummer uitgebreid met:
+
+zoeken op songtitel via MusicBrainz;
+tonen van de gevonden resultaten in een tabel;
+weergeven van de bijbehorende artiest;
+kiezen van een nummer uit de resultatenlijst;
+automatisch ophalen van de songtekst via Lyrics.ovh;
+mogelijkheid om de gekozen songtekst op te slaan als favoriet
+
 Gebruiksvriendelijkheid verbeterd door een consistente opmaak en navigatie in de gehele applicatie toe te passen.
 
 Datum: 27-10-2026

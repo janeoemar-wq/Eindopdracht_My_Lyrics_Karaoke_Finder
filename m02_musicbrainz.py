@@ -734,6 +734,16 @@ def zoek_nummer_menu():
             border_style="bright_yellow"
         )
     )
+    console.print(
+        f"[bright_yellow]Aantal gevonden nummers: {len(nummers)}[/bright_yellow]"
+    )
+    console.print(
+        f"[bright_yellow]Getoonde resultaten: {len(nummers[:10])}[/bright_yellow]"
+    )
+    console.print(
+        "[bright_yellow]Kies een nummer voor de songtekst.[/bright_yellow]"
+    )
+
     console.print()
 
     console.print("1-10 = Nummer kiezen")
