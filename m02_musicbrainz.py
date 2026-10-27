@@ -635,6 +635,72 @@ def verwijder_favoriet():
     )
     return None
 
+def zoek_nummer_menu():
+
+    songtitel = console.input(
+        "[bold white]Voer songtitel in: [/bold white]"
+    ).strip()
+
+    if songtitel == "":
+        toon_foutmelding(
+            "Voer een songtitel in."
+        )
+        return None
+
+    resultaat = zoek_nummer(
+        songtitel
+    )
+
+    if resultaat is None:
+        return None
+
+    nummers = resultaat.get(
+        "recording-list",
+        []
+    )
+    if len(nummers) == 0:
+        toon_foutmelding(
+            "Geen nummers gevonden."
+        )
+
+        return None
+    tabel = Table(
+        border_style="bright_yellow"
+    )
+
+    tabel.add_column(
+        "Nr",
+        justify="center",
+        width=5
+    )
+
+    tabel.add_column(
+        "Titel",
+        overflow="ellipsis"
+    )
+    for nummer, opname in enumerate(
+            nummers[:10],
+            start=1
+    ):
+        tabel.add_row(
+            str(nummer),
+            opname.get(
+                "title",
+                "-"
+            )
+        )
+    console.print(
+        Panel(
+            tabel,
+            title=f"[bold bright_white]RESULTATEN VOOR {songtitel.upper()}[/bold bright_white]",
+            border_style="bright_yellow"
+        )
+    )
+    console.input(
+        "\nDruk op Enter om verder te gaan..."
+    )
+    return None
+
 def toon_muziek_menu():
     while True:
         submenu = maak_menu_tabel(45)
@@ -685,10 +751,11 @@ def toon_muziek_menu():
                 continue  # hiermee kom je weer in het hoofdmenu
 
 
+
         elif submenu_keuze == "2":
-            console.print(
-                "[yellow]Zoek nummer wordt later gebouwd[/yellow]"
-            )
+
+            zoek_nummer_menu()
+
             continue
 
         else:
@@ -747,4 +814,20 @@ def toon_favorieten_menu():
 
             continue
 
-def zoek_artiest_menu():
+def zoek_nummer(songtitel) -> dict | None:
+
+    try:
+
+        resultaat = musicbrainzngs.search_recordings(
+            recording=songtitel
+        )
+
+        return resultaat
+
+    except Exception as fout:
+
+        console.print(
+            f"[bold red]Fout:[/bold red] {fout}"
+        )
+
+        return None

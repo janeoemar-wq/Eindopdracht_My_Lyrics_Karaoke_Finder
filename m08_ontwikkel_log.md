@@ -245,3 +245,18 @@ Navigatieteksten verduidelijkt met beschrijvingen zoals:
 Dubbele codeblokken en foutieve inspringingen verwijderd tijdens het opschonen van m01_main.py.
 Menustructuur gecontroleerd en hersteld zodat submenu's correct terugkeren naar het juiste scherm.
 Gebruiksvriendelijkheid verbeterd door een consistente opmaak en navigatie in de gehele applicatie toe te passen.
+
+Datum: 27-10-2026
+Fase flowchart:
+Hoofdmenu / Navigatie
+Stap/Onderdeel:
+Refactor hoofdmenu
+Functie/codeblok:
+toon_muziek_menu()
+toon_favorieten_menu()
+toon_karaoke_menu()
+Aanpassing:
+Submenu's uit m01_main.py verplaatst naar aparte functies in modules.
+Bestandsnamen gestandaardiseerd naar m00 t/m m10 structuur.
+Waarom:
+Verbetering van de architectuur, onderhoudbaarheid en scheiding van verantwoordelijkheden.
