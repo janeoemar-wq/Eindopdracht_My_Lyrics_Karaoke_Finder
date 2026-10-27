@@ -10,7 +10,7 @@ __pycache__/
 *.pyc
 
 # Mijn persoonlijke instellingen
-M04_Config.py
+m04_config.py
 
 # Logbestand
-M07_Fouten.log
+m07_fouten.log

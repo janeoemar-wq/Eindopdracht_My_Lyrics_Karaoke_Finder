@@ -1,8 +1,18 @@
-"""Om dubbele codes  te voorkomen heb ik deze functie gemaakt en worden ze door gebruikt om een songtekst en karaoke voeo te zoeken
+"""
+utils voor:
+-herbruikbare functies
+-hulpmethoden
+-generieke functies die meerdere modules gebruiken
+Om dubbele codes  te voorkomen heb ik deze functie gemaakt en worden ze door gebruikt om een songtekst en karaoke voeo te zoeken
 console
 """
-from M00_Imports import *
-
+from m00_imports import *
+import logging
+logging.basicConfig(
+    filename="m07_fouten.log",
+    level=logging.ERROR,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 
 def vraag_artiest_en_titel():
@@ -18,7 +28,9 @@ def haal_data_op(url):
         response.raise_for_status()
         return response.json()
 
-    except requests.RequestException:
+    except requests.RequestException as fout:
+# Sla technische fouten permanent op in het logbestand.
+        logging.error(f"Fout bij ophalen van URL: {url} | {fout}")
         return None
 
 

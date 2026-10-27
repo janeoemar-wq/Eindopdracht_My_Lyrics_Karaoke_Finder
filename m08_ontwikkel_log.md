@@ -201,3 +201,47 @@ Mijn advies: die tip over dubbele code gaan we straks echt gebruiken wanneer we 
 ✅ Maak M10_Helpers.py
 ✅ Verplaats dubbele code naar helperfuncties
 ✅ Daarna verder met de karaokefunctie
+
+23 okt
+Herstel en refactor van de MusicBrainz-module.Functie/codeblok
+toon_artiesten()
+toon_nummers_van_artiest()
+zoek_artiest()
+
+Aanpassing en waarom
+Verkeerde inspringingen (if, elif, else) hersteld.
+Ontbrekende return-statements toegevoegd.
+while True teruggeplaatst in toon_nummers_van_artiest().
+Foutieve else-structuren gecorrigeerd.
+Twee kolommen voor artiestresultaten behouden tijdens de refactor.
+Meerdere syntaxfouten opgelost waardoor PyCharm meldingen gaf zoals:
+Unexpected indent
+Py:ELSE_KEYWORD
+Py:DEDENT
+Missing return statement
+Code opnieuw geformatteerd en getest.
+Nieuwe Git-commit en tag aangemaakt als herstelpunt.
+
+26-10
+
+Voor je ontwikkellog kun je dit kort en professioneel noteren:
+
+Gebruikersinterface consistent gemaakt door overal dezelfde notatie voor toetsen en keuzes toe te passen.
+Navigatieopties gewijzigd van ronde haakjes ( ) naar vierkante haakjes [ ] voor een uniforme uitstraling.
+Gele markering toegevoegd aan invoertoetsen zoals [0], [S], [N] en [V] zodat beschikbare acties beter zichtbaar zijn.
+Invoerscherm voor artiesten aangepast naar een duidelijkere opmaak met aparte navigatieregels:
+[0] Terug | [S] Hoofdmenu
+Voer artiestnaam in:
+Zoekresultaten van artiesten verdeeld over pagina's voor een betere leesbaarheid.
+Paginering toegevoegd met opties voor volgende en vorige pagina.
+Informatie toegevoegd over:
+totaal aantal gevonden resultaten;
+aantal getoonde resultaten;
+huidige pagina.
+Resultaten overzichtelijk weergegeven in twee kolommen.
+Navigatieteksten verduidelijkt met beschrijvingen zoals:
+1-10 = Artiest kiezen op deze pagina
+1-20 = Nummer kiezen op deze pagina
+Dubbele codeblokken en foutieve inspringingen verwijderd tijdens het opschonen van m01_main.py.
+Menustructuur gecontroleerd en hersteld zodat submenu's correct terugkeren naar het juiste scherm.
+Gebruiksvriendelijkheid verbeterd door een consistente opmaak en navigatie in de gehele applicatie toe te passen.

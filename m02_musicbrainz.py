@@ -18,14 +18,16 @@ midden = (len(pagina_artiesten) + 1) // 2
 """
 
 import musicbrainzngs
-from M00_Imports import *
-from M04_Config import EMAIL
+from m00_imports import *
+from m04_config import EMAIL
+from m04_config import LYRICS_API_URL
 from rich.columns import Columns
-from M10_Helpersfunctie import (
+from m10_utils import (
     haal_data_op,
-    toon_foutmelding
+    toon_foutmelding,
+    maak_menu_tabel
 )
-
+from urllib.parse import quote ## Zet spaties en speciale tekens om naar een geldige URL voor de API.
 #API identificatie instellen
 musicbrainzngs.set_useragent(
     "My Lyrics Finder",
@@ -69,12 +71,12 @@ def toon_artiesten(artiest_naam):
         toon_foutmelding(
             "Geen artiesten gevonden."
         )
-# FUNCTIE def toon_artiesten met reurn STOPPEN, onderstaande tabel wordt niet gemaakt.
+# FUNCTIE def toon_artiesten met return STOPPEN, onderstaande tabel wordt niet gemaakt.
         return None
     pagina = 0
 
     while True:
-        per_pagina = 20
+        per_pagina = 10
 
         start = pagina * per_pagina
         einde = start + per_pagina
@@ -113,11 +115,11 @@ def toon_artiesten(artiest_naam):
             overflow="ellipsis"
         )
 
-#Verdeel de resultaten gelijkmatig over de linker- en rechtertabel.
+        # Toon maximaal 10 resultaten verdeeld over twee kolommen.
 #enumerate=voeg automatisch nummers toe,begin bij 1
-        midden = (len(pagina_artiesten) + 1) // 2
+
         for nummer, artiest_musicbrainz in enumerate(
-                pagina_artiesten[:midden],
+                pagina_artiesten[:5],
                 start=1
         ):
             linker_tabel.add_row(
@@ -128,8 +130,8 @@ def toon_artiesten(artiest_naam):
             )
 
         for nummer, artiest_musicbrainz in enumerate(
-                pagina_artiesten[midden:],
-                start=midden + 1
+                pagina_artiesten[5:10],
+                start=6
         ):
             rechter_tabel.add_row(
                 str(nummer),
@@ -153,13 +155,61 @@ def toon_artiesten(artiest_naam):
                 width=160,
             )
         )
+# Toon hoeveel resultaten zijn gevonden en hoeveel resultaten
+# op de huidige pagina zichtbaar zijn voor de gebruiker.
+        totaal_paginas = (
+                                 len(artiesten) + per_pagina - 1
+                         ) // per_pagina
+
+# Geef de gebruiker inzicht in het totaal aantal resultaten,
+# de huidige pagina en het aantal getoonde resultaten.
         console.print(
             f"[bright_yellow]Aantal gevonden artiesten: {len(artiesten)}[/bright_yellow]"
         )
 
+        console.print(
+            f"[bright_yellow]Getoonde resultaten: {len(pagina_artiesten)}[/bright_yellow]"
+        )
+
+        console.print(
+            f"[bright_yellow]Pagina {pagina + 1} van {totaal_paginas}[/bright_yellow]"
+        )
+
+        keuze = console.input(
+            "\n[bold yellow][N][/bold yellow] Volgende pagina | "
+            "[bold yellow][V][/bold yellow] Vorige pagina | "
+            "[bold yellow][0][/bold yellow] Terug | "
+            "[bold yellow][S][/bold yellow] Hoofdmenu: "
+        ).upper()
+
+        if keuze == "N":
+            if pagina < totaal_paginas - 1:
+                pagina += 1
+            else:
+                console.print(
+                    "[yellow]Dit is de laatste pagina.[/yellow]"
+                )
+            continue
+
+        if keuze == "V":
+            if pagina > 0:
+                pagina -= 1
+            else:
+                console.clear()
+                console.print(
+                    "[yellow]Dit is de eerste pagina.[/yellow]"
+                )
+            continue
+
+        if keuze == "0":
+            return None
+
+        if keuze == "S":
+            return "hoofdmenu"
+
         console.print()
 
-        console.print("1-20 = Artiest kiezen")
+        console.print("1-10 = Artiest kiezen op deze pagina")
         console.print("N    = Volgende artiesten")
         console.print("V    = Vorige artiesten")
         console.print("0    = Terug")
@@ -297,7 +347,7 @@ def toon_nummers_van_artiest(
 
         console.print()
 
-        console.print("1-20 = Nummer kiezen")
+        console.print("1-20 = Nummer kiezen op deze pagina")
         console.print("N    = Volgende")
         console.print("V    = Vorige")
         console.print("0    = Terug")
@@ -362,28 +412,32 @@ def toon_songtekst(
         artiest_naam,
         songtitel
 ):
-    url = (
-        f"https://api.lyrics.ovh/v1/"
-        f"{artiest_naam}/{songtitel}"
-    )
+# Zet spaties en speciale tekens om naar een veilige URL-notatie voor de lyrics API.
+    veilige_artiest = quote(artiest_naam)
+    veilige_titel = quote(songtitel)
+
+# Gebruik de centrale configuratie voor de API-basis-URL.
+# Hierdoor blijven instellingen gescheiden van programmalogica.
+    url = f"{LYRICS_API_URL}{veilige_artiest}/{veilige_titel}"
 
     try:
-# Ik gebruik de hulpfunctie uit M10, zodat alle API-aanvragen en foutafhandeling op één centrale plek staan.
+# Ik gebruik de hulpfunctie uit m0010, zodat alle API-aanvragen en foutafhandeling op één centrale plek staan.
+
         data = haal_data_op(url)
 
 # Stop de functie als de API geen gegevens terugstuurt
+# Toon een nette foutmelding wanneer de songtekst niet beschikbaar is.
         if data is None:
             console.print(
-                "[bold red]Fout bij ophalen van de songtekst.[/bold red]"
+                f"[red]Geen songtekst gevonden voor:[/red] "
+                f"{artiest_naam} - {songtitel}"
             )
-
             return None
 
         songtekst = data.get(
             "lyrics",
             "Geen songtekst gevonden."
         )
-
         console.print()
 
         console.print(
@@ -393,6 +447,7 @@ def toon_songtekst(
                 border_style="bright_yellow"
             )
         )
+
 # OPSLAAN
         opslaan = console.input(
             "\nOpslaan als favoriet? (J/N): "
@@ -404,18 +459,22 @@ def toon_songtekst(
                 artiest_naam,
                 songtitel
             )
+
+
+        return songtekst
     except Exception as fout:
 
         console.print(
             f"[bold red]Fout:[/bold red] {fout}"
         )
+        return None
 #OPSLAAN IN FAVORIETEN
 def sla_favoriet_op(
         artiest_naam,
         songtitel
 ):
     with open(
-            "M09_Favorieten.txt",
+            "m09_favorieten.txt",
             "a",
             encoding="utf-8"
     ) as bestand:
@@ -433,7 +492,7 @@ def toon_favorieten():
     try:
 
         with open(
-                "M09_Favorieten.txt",
+                "m09_favorieten.txt",
                 "r",
                 encoding="utf-8"
         ) as bestand:
@@ -512,7 +571,7 @@ def toon_favorieten():
 def verwijder_favoriet():
 
     with open(
-            "M09_Favorieten.txt",
+            "m09_favorieten.txt",
             "r",
             encoding="utf-8"
     ) as bestand:
@@ -561,7 +620,7 @@ def verwijder_favoriet():
 
     del favorieten[keuze - 1]
     with open(
-            "M09_Favorieten.txt",
+            "m09_favorieten.txt",
             "w",
             encoding="utf-8"
     ) as bestand:
@@ -574,3 +633,118 @@ def verwijder_favoriet():
     console.input(
         "\nDruk op Enter om verder te gaan..."
     )
+    return None
+
+def toon_muziek_menu():
+    while True:
+        submenu = maak_menu_tabel(45)
+
+        submenu.add_row("1", "Zoek artiest")
+        submenu.add_row("2", "Zoek nummer")
+        submenu.add_row("0", "Terug")
+
+        console.print(
+        Panel(
+        submenu,
+        title="[bold bright_white]MUZIEK & SONGTEKST[/bold bright_white]",
+        title_align="center",
+        border_style="bright_yellow",
+        width=50,
+        )
+        )
+        submenu_keuze = console.input(
+            "\nMaak een keuze "
+            "[bold yellow][0][/bold yellow] t/m "
+            "[bold yellow][2][/bold yellow]: "
+        ).strip()
+
+        if submenu_keuze == "0":
+            break
+
+        if submenu_keuze == "1":
+            console.print(
+                "\n[bold yellow][0][/bold yellow] Terug | "
+                "[bold yellow][S][/bold yellow] Hoofdmenu"
+            )
+
+            artiest_naam = console.input(
+                "[bold white]Voer artiestnaam in: [/bold white]"
+            )
+
+            if artiest_naam == "0":
+                break
+
+            if artiest_naam.upper() == "S":
+                break
+
+            resultaat= toon_artiesten(
+                artiest_naam
+            )
+
+            if resultaat == "hoofdmenu":
+                continue  # hiermee kom je weer in het hoofdmenu
+
+
+        elif submenu_keuze == "2":
+            console.print(
+                "[yellow]Zoek nummer wordt later gebouwd[/yellow]"
+            )
+            continue
+
+        else:
+            console.print(
+                "[red]Ongeldige keuze[/red]"
+            )
+            continue
+
+def toon_favorieten_menu():
+    while True:
+
+        console.clear()
+        submenu = maak_menu_tabel(50)
+
+        submenu.add_row("1", "Favorieten bekijken")
+        submenu.add_row("2", "Favoriet verwijderen")
+        submenu.add_row("0", "Terug")
+
+        console.print(
+            Panel(
+                submenu,
+                title="[bold bright_white]OPGESLAGEN NUMMERS[/bold bright_white]",
+                title_align="center",
+                border_style="bright_yellow",
+                width=50,
+            )
+        )
+        # Vraag de gebruiker om een keuze uit het submenu.
+        submenu_keuze = console.input(
+            "\nMaak een keuze "
+            "[bold yellow][0][/bold yellow] t/m "
+            "[bold yellow][2][/bold yellow]: "
+        ).strip()
+
+        if submenu_keuze == "0":
+            break
+
+        if submenu_keuze == "1":
+
+            toon_favorieten()
+
+            console.input(
+                "\nDruk op Enter om verder te gaan..."
+            )
+            continue
+
+
+
+
+        elif submenu_keuze == "2":
+
+            resultaat = verwijder_favoriet()
+
+            if resultaat == "hoofdmenu":
+                break
+
+            continue
+
+def zoek_artiest_menu():

@@ -1,5 +1,6 @@
-from M00_Imports import *
-from M10_Helpersfunctie import (
+from m00_imports import *
+from m04_config import YOUTUBE_SEARCH_URL
+from m10_utils import (
     vraag_artiest_en_titel,
     maak_menu_tabel
 )
@@ -43,10 +44,12 @@ def toon_karaoke_menu():
                 f"{artiest} {titel} karaoke"
 
             )
+# Bouw de zoek-URL op met een configurabele basis-URL.
+# Dit vergemakkelijkt onderhoud en toekomstige wijzigingen.
 
             youtube_url = (
 
-                    "https://www.youtube.com/results?search_query="
+                    YOUTUBE_SEARCH_URL
 
                     + quote_plus(zoekopdracht)
 
@@ -70,8 +73,8 @@ def toon_karaoke_menu():
 
             continue
 
-# SUB MENU KEUZE 2: zoek alle karaoke resulaten van een artiest
-#Artiest + titel + karaoke
+# SUBMENU KEUZE 2:
+# Open YouTube-resultaten voor alle karaokevideo's van een artiest.
         elif submenu_keuze == "2":
 
             artiest = console.input(
@@ -79,7 +82,7 @@ def toon_karaoke_menu():
             ).strip()
 
             youtube_url = (
-                    "https://www.youtube.com/results?search_query="
+                    YOUTUBE_SEARCH_URL
                     + quote_plus(f"{artiest} karaoke")
             )
 

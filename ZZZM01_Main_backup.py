@@ -2,7 +2,7 @@
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
-from M02_Musicbrainz import toon_artiesten, toon_favorieten, verwijder_favoriet
+from m02_musicbrainz import toon_artiesten, toon_favorieten, verwijder_favoriet
 
 console = Console()
 # begin LOGO
