@@ -31,7 +31,7 @@ def toon_hoofdmenu():
     tabel.add_column("Keuze", justify="center")
     tabel.add_column("Actie")
 
-    tabel.add_row("1", "Muziek en songtekst zoeken")
+    tabel.add_row("1", "Muziek en songteksten zoeken")
     tabel.add_row("2", "Opgeslagen nummers bekijken")
     tabel.add_row("3", "Karaoke zoeken")
     tabel.add_row("0", "Afsluiten")

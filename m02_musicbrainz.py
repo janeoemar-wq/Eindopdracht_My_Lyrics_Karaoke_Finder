@@ -174,15 +174,20 @@ def toon_artiesten(artiest_naam):
         console.print(
             f"[bright_yellow]Pagina {pagina + 1} van {totaal_paginas}[/bright_yellow]"
         )
-
-        keuze = console.input(
+        console.print(
             "\n[bold yellow][N][/bold yellow] Volgende pagina | "
             "[bold yellow][V][/bold yellow] Vorige pagina | "
             "[bold yellow][0][/bold yellow] Terug | "
-            "[bold yellow][S][/bold yellow] Hoofdmenu: "
-        ).upper()
+            "[bold yellow][S][/bold yellow] Hoofdmenu"
+        )
 
-        if keuze == "N":
+        console.print("1-10 = Artiest kiezen op deze pagina")
+
+        keuze = console.input(
+            "\nMaak keuze: "
+        ).upper()
+    #keuze maken
+        if keuze.upper() == "N":
             if pagina < totaal_paginas - 1:
                 pagina += 1
             else:
@@ -191,51 +196,29 @@ def toon_artiesten(artiest_naam):
                 )
             continue
 
-        if keuze == "V":
+
+        elif keuze.upper() == "V":
+
             if pagina > 0:
+
                 pagina -= 1
+
             else:
-                console.clear()
+
                 console.print(
+
                     "[yellow]Dit is de eerste pagina.[/yellow]"
+
                 )
+
             continue
 
-        if keuze == "0":
+        elif keuze == "0":
             return None
 
-        if keuze == "S":
-            return "hoofdmenu"
-
-        console.print()
-
-        console.print("1-10 = Artiest kiezen op deze pagina")
-        console.print("N    = Volgende artiesten")
-        console.print("V    = Vorige artiesten")
-        console.print("0    = Terug")
-        console.print("S    = Hoofdmenu")
-
-    #Vraag de gebruiker te maken:1-10 = Artiest kiezen
-    # N    = Volgende artiesten
-    # V    = Vorige artiesten
-    # 0    = Terug
-    # S    = Hoofdmenu
-        keuze = console.input(
-            "\nMaak keuze: "
-        )
-    #keuze maken
-        if keuze.upper() == "N":
-            console.print(
-                "[yellow]Volgende pagina nog bouwen[/yellow]"
-            )
-            return None
-        elif keuze.upper() == "V":
-            console.print(
-                "[yellow]Vorige pagina nog bouwen[/yellow]"
-            )
-            return None
         elif keuze.upper() == "S":
             return "hoofdmenu"
+
         elif keuze.isdigit():
             keuze = int(keuze)
             if keuze < 1 or keuze > 10:
@@ -243,17 +226,35 @@ def toon_artiesten(artiest_naam):
                     "Ongeldige keuze"
                 )
                 return None
-            gekozen_artiest = artiesten[keuze - 1]
+
+            if keuze > len(pagina_artiesten):
+                toon_foutmelding(
+                    "Ongeldige keuze"
+                )
+                continue
+
+            gekozen_artiest = pagina_artiesten[keuze - 1]
+
             artiest_naam = gekozen_artiest["name"]
             artist_id = gekozen_artiest["id"]
+
             artiest, songtitel = toon_nummers_van_artiest(
-                artist_id, artiest_naam)
+                artist_id,
+                artiest_naam
+            )
+
             if artiest is None:
-                return None
-            toon_songtekst(
+                continue
+
+            resultaat_songtekst = toon_songtekst(
                 artiest,
                 songtitel
             )
+
+            if resultaat_songtekst is None:
+                continue
+
+            break
         else:
             toon_foutmelding(
                 "Ongeldige keuze"
@@ -345,13 +346,15 @@ def toon_nummers_van_artiest(
             )
         )
 
-        console.print()
+
+        console.print(
+            "\n[bold yellow][N][/bold yellow] Volgende pagina | "
+            "[bold yellow][V][/bold yellow] Vorige pagina | "
+            "[bold yellow][0][/bold yellow] Terug | "
+            "[bold yellow][S][/bold yellow] Hoofdmenu"
+        )
 
         console.print("1-20 = Nummer kiezen op deze pagina")
-        console.print("N    = Volgende")
-        console.print("V    = Vorige")
-        console.print("0    = Terug")
-        console.print("S    = Hoofdmenu")
 
         keuze = console.input(
             "\nMaak keuze: "
@@ -411,7 +414,8 @@ def toon_nummers_van_artiest(
 def toon_songtekst(
         artiest_naam,
         songtitel
-):
+) -> str | None:
+
 # Zet spaties en speciale tekens om naar een veilige URL-notatie voor de lyrics API.
     veilige_artiest = quote(artiest_naam)
     veilige_titel = quote(songtitel)
@@ -425,6 +429,7 @@ def toon_songtekst(
 
         data = haal_data_op(url)
 
+
 # Stop de functie als de API geen gegevens terugstuurt
 # Toon een nette foutmelding wanneer de songtekst niet beschikbaar is.
         if data is None:
@@ -432,6 +437,11 @@ def toon_songtekst(
                 f"[red]Geen songtekst gevonden voor:[/red] "
                 f"{artiest_naam} - {songtitel}"
             )
+
+            console.input(
+                "\nDruk op Enter om een ander nummer te kiezen..."
+            )
+
             return None
 
         songtekst = data.get(
@@ -462,6 +472,7 @@ def toon_songtekst(
 
 
         return songtekst
+
     except Exception as fout:
 
         console.print(
@@ -474,7 +485,7 @@ def sla_favoriet_op(
         songtitel
 ):
     with open(
-            "m09_favorieten.txt",
+            "m09_favorieten_beheren.txt",
             "a",
             encoding="utf-8"
     ) as bestand:
@@ -492,7 +503,7 @@ def toon_favorieten():
     try:
 
         with open(
-                "m09_favorieten.txt",
+                "m09_favorieten_beheren.txt",
                 "r",
                 encoding="utf-8"
         ) as bestand:
@@ -555,7 +566,7 @@ def toon_favorieten():
                     equal=True,
                     expand=False
                 ),
-                title="[bold bright_white]OPGESLAGEN NUMMERS[/bold bright_white]",
+                title="[bold bright_white]OPGESLAGEN FAVORIETEN [/bold bright_white]",
                 border_style="bright_yellow",
                 width=160
             )
@@ -571,7 +582,7 @@ def toon_favorieten():
 def verwijder_favoriet():
 
     with open(
-            "m09_favorieten.txt",
+            "m09_favorieten_beheren.txt",
             "r",
             encoding="utf-8"
     ) as bestand:
@@ -584,16 +595,41 @@ def verwijder_favoriet():
         )
         return None
 
+    tabel = Table(
+        border_style="bright_yellow"
+    )
+
+    tabel.add_column(
+        "Nr",
+        justify="center",
+        width=5
+    )
+
+    tabel.add_column(
+        "Favoriet",
+        overflow="ellipsis"
+    )
+
     for nummer, favoriet in enumerate(
             favorieten,
             start=1
     ):
-
-        console.print(
-            f"{nummer}. {favoriet.strip()}"
+        tabel.add_row(
+            str(nummer),
+            favoriet.strip()
         )
+
+    console.print(
+        Panel(
+            tabel,
+            title="[bold bright_white]FAVORIET VERWIJDEREN[/bold bright_white]",
+            border_style="bright_yellow"
+        )
+    )
+
     keuze = console.input(
-        "\nNummer om te verwijderen (0 = Terug, S = Hoofdmenu): "
+        "\nNummer(s) om te verwijderen "
+        "(bijv. 1,3,5 | 0 = Terug | S = Hoofdmenu): "
     ).upper()
 
     if keuze == "0":
@@ -602,33 +638,47 @@ def verwijder_favoriet():
         return "hoofdmenu"
     try:
 
-        keuze = int(keuze)
+        keuzes = sorted(
+            {
+                int(nummer.strip())
+                for nummer in keuze.split(",")
+            }
+        )
 
     except ValueError:
 
         console.print(
-            "[red]Voer een nummer in[/red]"
+            "[red]Voer geldige nummers in.[/red]"
         )
         return None
 
-#controle foutieve keuze
-    if keuze < 1 or keuze > len(favorieten):
-        console.print(
-            "[red]Ongeldig nummer[/red]"
-        )
-        return None
+# Controleer of alle ingevoerde nummers bestaan.
 
-    del favorieten[keuze - 1]
+        for nummer in keuzes:
+
+            if nummer < 1 or nummer > len(favorieten):
+                console.print(
+                    f"[red]Ongeldig nummer: {nummer}[/red]"
+                )
+                return None
+
+    for te_verwijderen in sorted(
+        keuzes,
+        reverse=True
+    ):
+        del favorieten[te_verwijderen - 1]
+
     with open(
-            "m09_favorieten.txt",
+            "m09_favorieten_beheren.txt",
             "w",
             encoding="utf-8"
     ) as bestand:
         bestand.writelines(
             favorieten
         )
+
     console.print(
-        "[green]Favoriet verwijderd.[/green]"
+        f"[green]{len(keuzes)} favoriet(en) verwijderd.[/green]"
     )
     console.input(
         "\nDruk op Enter om verder te gaan..."
@@ -746,7 +796,7 @@ def zoek_nummer_menu():
 
     console.print()
 
-    console.print("1-10 = Nummer kiezen")
+    console.print("1-20 = Nummer kiezen op deze pagina")
     console.print("0    = Terug")
 
     keuze = console.input(
@@ -788,10 +838,13 @@ def zoek_nummer_menu():
         "name",
         "-"
     )
-    toon_songtekst(
+    resultaat_songtekst = toon_songtekst(
         artiest_naam,
         songtitel
     )
+
+    if resultaat_songtekst is None:
+        return None
 
     return None
 
@@ -806,7 +859,7 @@ def toon_muziek_menu():
         console.print(
         Panel(
         submenu,
-        title="[bold bright_white]MUZIEK & SONGTEKST[/bold bright_white]",
+        title="[bold bright_white]MUZIEK & SONGTEKSTEN[/bold bright_white]",
         title_align="center",
         border_style="bright_yellow",
         width=50,
@@ -815,7 +868,7 @@ def toon_muziek_menu():
         submenu_keuze = console.input(
             "\nMaak een keuze "
             "[bold yellow][0][/bold yellow] t/m "
-            "[bold yellow][2][/bold yellow]: "
+            "[bold yellow][3][/bold yellow]: "
         ).strip()
 
         if submenu_keuze == "0":
@@ -866,12 +919,13 @@ def toon_favorieten_menu():
 
         submenu.add_row("1", "Favorieten bekijken")
         submenu.add_row("2", "Favoriet verwijderen")
+        submenu.add_row("3", "Songtekst bekijken")
         submenu.add_row("0", "Terug")
 
         console.print(
             Panel(
                 submenu,
-                title="[bold bright_white]OPGESLAGEN NUMMERS[/bold bright_white]",
+                title="[bold bright_white]FAVORIETEN BEHEREN[/bold bright_white]",
                 title_align="center",
                 border_style="bright_yellow",
                 width=50,
@@ -881,7 +935,7 @@ def toon_favorieten_menu():
         submenu_keuze = console.input(
             "\nMaak een keuze "
             "[bold yellow][0][/bold yellow] t/m "
-            "[bold yellow][2][/bold yellow]: "
+            "[bold yellow][3][/bold yellow]: "
         ).strip()
 
         if submenu_keuze == "0":
@@ -896,14 +950,47 @@ def toon_favorieten_menu():
             )
             continue
 
-
-
-
         elif submenu_keuze == "2":
 
             resultaat = verwijder_favoriet()
 
             if resultaat == "hoofdmenu":
                 break
+
+            continue
+
+
+
+        elif submenu_keuze == "3":
+
+            toon_favorieten()
+
+            keuze = console.input(
+
+                "\nVoer het nummer van een favoriet in: "
+
+            )
+
+            with open(
+                    "m09_favorieten_beheren.txt",
+                    "r",
+                    encoding="utf-8"
+            ) as bestand:
+
+                favorieten = bestand.readlines()
+
+            keuze = int(keuze)
+
+            favoriet = favorieten[keuze - 1].strip()
+
+            artiest_naam, songtitel = favoriet.split(
+                " - ",
+                maxsplit=1
+            )
+
+            toon_songtekst(
+                artiest_naam,
+                songtitel
+            )
 
             continue
