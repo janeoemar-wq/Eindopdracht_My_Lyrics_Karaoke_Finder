@@ -9,7 +9,7 @@ console
 from m00_imports import *
 import logging
 logging.basicConfig(
-    filename="m07_fouten.log",
+    filename="temp.log",
     level=logging.ERROR,
     format="%(asctime)s - %(levelname)s - %(message)s"
 )

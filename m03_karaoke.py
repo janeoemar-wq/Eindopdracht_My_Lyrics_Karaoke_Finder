@@ -1,19 +1,18 @@
 from m00_imports import *
 from m04_config import YOUTUBE_SEARCH_URL
-from m10_utils import (
+from m05_utils import (
     vraag_artiest_en_titel,
-    maak_menu_tabel
+    maak_menu_tabel,
+    toon_foutmelding
+
 )
 
 def toon_karaoke_menu():
     while True:
         submenu = maak_menu_tabel(50)
 
-        submenu.add_column("Keuze", justify="center")
-        submenu.add_column("Actie")
-
         submenu.add_row("1", "Zoek karaokevideo")
-        submenu.add_row("2", "Open YouTube-resultaten")
+        submenu.add_row("2", "Karaokefavorieten")
         submenu.add_row("0", "Terug")
 
         console.print(
@@ -39,6 +38,11 @@ def toon_karaoke_menu():
 
             artiest, titel = vraag_artiest_en_titel()
 
+            if artiest == "" or titel == "":
+                toon_foutmelding(
+                    "Voer een artiest en titel in."
+                )
+                continue
             zoekopdracht = (
 
                 f"{artiest} {titel} karaoke"
@@ -54,46 +58,61 @@ def toon_karaoke_menu():
                     + quote_plus(zoekopdracht)
 
             )
-
             webbrowser.open(youtube_url)
-
             console.print(
-
                 Panel(
-
                     f"YouTube geopend voor:\n{artiest} - {titel}",
-
                     title="Karaoke",
-
                     border_style="green"
+                )
+            )
+            # Vraag of de gebruiker de karaokezoekopdracht wil opslaan als favoriet.
+            opslag = console.input(
+                "\nOpslaan als karaokefavoriet? (j/n): "
+            ).strip().lower()
 
+            if opslag == "j":
+                sla_karaoke_favoriet_op(
+                    artiest,
+                    titel,
+                    youtube_url
                 )
 
-            )
-
+                console.print(
+                    "[green]Karaokefavoriet opgeslagen.[/green]"
+                )
             continue
 
 # SUBMENU KEUZE 2:
 # Open YouTube-resultaten voor alle karaokevideo's van een artiest.
         elif submenu_keuze == "2":
 
-            artiest = console.input(
-                "Artiest: "
-            ).strip()
-
-            youtube_url = (
-                    YOUTUBE_SEARCH_URL
-                    + quote_plus(f"{artiest} karaoke")
-            )
-
-            webbrowser.open(youtube_url)
-
             console.print(
-                Panel(
-                    f"Karaoke-resultaten geopend voor:\n{artiest}",
-                    title="YouTube",
-                    border_style="green"
-                )
+                "[yellow]Karaoke favorieten nog niet geïmplementeerd.[/yellow]"
             )
 
             continue
+
+        else:
+
+            toon_foutmelding(
+                "Ongeldige keuze"
+            )
+            continue
+
+
+# Sla een karaokefavoriet op in het bestand met opgeslagen karaokevideo's.
+def sla_karaoke_favoriet_op(
+    artiest,
+    titel,
+    url
+):
+    with open(
+        "m07_karaoke_favorieten.txt",
+        "a",
+        encoding="utf-8"
+    ) as bestand:
+        bestand.write(
+            f"{artiest} - {titel}|{url}\n"
+        )
+

@@ -22,10 +22,11 @@ from m00_imports import *
 from m04_config import EMAIL
 from m04_config import LYRICS_API_URL
 from rich.columns import Columns
-from m10_utils import (
+from m05_utils import (
     haal_data_op,
     toon_foutmelding,
-    maak_menu_tabel
+    maak_menu_tabel,
+    # toon_paginering
 )
 from urllib.parse import quote ## Zet spaties en speciale tekens om naar een geldige URL voor de API.
 #API identificatie instellen
@@ -120,7 +121,7 @@ def toon_artiesten(artiest_naam):
 
         for nummer, artiest_musicbrainz in enumerate(
                 pagina_artiesten[:5],
-                start=1
+                start=start + 1
         ):
             linker_tabel.add_row(
                 str(nummer),
@@ -131,7 +132,7 @@ def toon_artiesten(artiest_naam):
 
         for nummer, artiest_musicbrainz in enumerate(
                 pagina_artiesten[5:10],
-                start=6
+                start=start + 6
         ):
             rechter_tabel.add_row(
                 str(nummer),
@@ -205,10 +206,8 @@ def toon_artiesten(artiest_naam):
 
             else:
 
-                console.print(
-
-                    "[yellow]Dit is de eerste pagina.[/yellow]"
-
+                toon_foutmelding(
+                    "Dit is de eerste pagina."
                 )
 
             continue
@@ -221,19 +220,19 @@ def toon_artiesten(artiest_naam):
 
         elif keuze.isdigit():
             keuze = int(keuze)
-            if keuze < 1 or keuze > 10:
+            if keuze < start + 1 or keuze > start + len(pagina_artiesten):
                 toon_foutmelding(
                     "Ongeldige keuze"
                 )
                 return None
 
-            if keuze > len(pagina_artiesten):
+            if keuze > start + len(pagina_artiesten):
                 toon_foutmelding(
                     "Ongeldige keuze"
                 )
                 continue
 
-            gekozen_artiest = pagina_artiesten[keuze - 1]
+            gekozen_artiest = artiesten[keuze - 1]
 
             artiest_naam = gekozen_artiest["name"]
             artist_id = gekozen_artiest["id"]
@@ -485,7 +484,7 @@ def sla_favoriet_op(
         songtitel
 ):
     with open(
-            "m09_favorieten_beheren.txt",
+            "m06_songteksten_favorieten.txt",
             "a",
             encoding="utf-8"
     ) as bestand:
@@ -503,7 +502,7 @@ def toon_favorieten():
     try:
 
         with open(
-                "m09_favorieten_beheren.txt",
+                "m06_songteksten_favorieten.txt",
                 "r",
                 encoding="utf-8"
         ) as bestand:
@@ -582,7 +581,7 @@ def toon_favorieten():
 def verwijder_favoriet():
 
     with open(
-            "m09_favorieten_beheren.txt",
+            "m06_songteksten_favorieten.txt",
             "r",
             encoding="utf-8"
     ) as bestand:
@@ -654,13 +653,13 @@ def verwijder_favoriet():
 
 # Controleer of alle ingevoerde nummers bestaan.
 
-        for nummer in keuzes:
+    for nummer in keuzes:
 
-            if nummer < 1 or nummer > len(favorieten):
-                console.print(
-                    f"[red]Ongeldig nummer: {nummer}[/red]"
-                )
-                return None
+        if nummer < 1 or nummer > len(favorieten):
+            console.print(
+                f"[red]Ongeldig nummer: {nummer}[/red]"
+            )
+            return None
 
     for te_verwijderen in sorted(
         keuzes,
@@ -669,7 +668,7 @@ def verwijder_favoriet():
         del favorieten[te_verwijderen - 1]
 
     with open(
-            "m09_favorieten_beheren.txt",
+            "m06_songteksten_favorieten.txt",
             "w",
             encoding="utf-8"
     ) as bestand:
@@ -726,127 +725,233 @@ def zoek_nummer_menu():
         "recording-list",
         []
     )
+# Toon zoekresultaten in pagina's van 10 nummers.
+    pagina = 0
+    per_pagina = 10
+
     if len(nummers) == 0:
         toon_foutmelding(
             "Geen nummers gevonden."
         )
-
         return None
-    tabel = Table(
-        border_style="bright_yellow"
-    )
 
-    tabel.add_column(
-        "Nr",
-        justify="center",
-        width=5
-    )
+    while True:
 
-    tabel.add_column(
-        "Titel",
-        overflow="ellipsis"
-    )
+        start = pagina * per_pagina
+        einde = start + per_pagina
 
-    tabel.add_column(
-        "Artiest",
-        overflow="ellipsis"
-    )
+        pagina_nummers = nummers[start:einde]
+        midden = (len(pagina_nummers) + 1) // 2
 
-    for nummer, opname in enumerate(
-            nummers[:10],
-            start=1
-    ):
-        artiest_lijst = opname.get(
+        linker_tabel = Table(
+            border_style="bright_yellow",
+            expand=True
+        )
+
+        linker_tabel.add_column(
+            "Nr",
+            justify="center",
+            width=5
+        )
+
+        linker_tabel.add_column(
+            "Titel",
+            overflow="ellipsis"
+        )
+
+        linker_tabel.add_column(
+            "Artiest",
+            overflow="ellipsis"
+        )
+
+        rechter_tabel = Table(
+            border_style="bright_yellow",
+            expand=True
+        )
+
+        rechter_tabel.add_column(
+            "Nr",
+            justify="center",
+            width=5
+        )
+
+        rechter_tabel.add_column(
+            "Titel",
+            overflow="ellipsis"
+        )
+
+        rechter_tabel.add_column(
+            "Artiest",
+            overflow="ellipsis"
+        )
+
+        for nummer, opname in enumerate(
+                pagina_nummers[:midden],
+                start=start + 1
+        ):
+            artiest_lijst = opname.get(
+                "artist-credit",
+                []
+            )
+
+            artiest_naam = "-"
+
+            if len(artiest_lijst) > 0:
+                artiest_naam = artiest_lijst[0].get(
+                    "name",
+                    "-"
+                )
+
+            linker_tabel.add_row(
+                str(nummer),
+                opname.get(
+                    "title",
+                    "-"
+                ),
+                artiest_naam
+            )
+
+        for nummer, opname in enumerate(
+                pagina_nummers[midden:],
+                start=start + midden + 1
+        ):
+            artiest_lijst = opname.get(
+                "artist-credit",
+                []
+            )
+
+            artiest_naam = "-"
+
+            if len(artiest_lijst) > 0:
+                artiest_naam = artiest_lijst[0].get(
+                    "name",
+                    "-"
+                )
+
+            rechter_tabel.add_row(
+                str(nummer),
+                opname.get(
+                    "title",
+                    "-"
+                ),
+                artiest_naam
+            )
+
+        console.print(
+            Panel(
+                Columns(
+                    [linker_tabel, rechter_tabel],
+                    equal=True,
+                    expand=False
+                ),
+                title=f"[bold bright_white]RESULTATEN VOOR {songtitel.upper()}[/bold bright_white]",
+                border_style="bright_yellow",
+                width=160
+            )
+        )
+        console.print(
+            f"[bright_yellow]Aantal gevonden nummers: {len(nummers)}[/bright_yellow]"
+        )
+        console.print(
+            f"[bright_yellow]Getoonde resultaten: {len(pagina_nummers)}[/bright_yellow]"
+        )
+        console.print(
+            "[bright_yellow]Kies een nummer voor de songtekst.[/bright_yellow]"
+        )
+
+        console.print()
+
+        totaal_paginas = (
+                                len(nummers) + per_pagina - 1
+                        ) // per_pagina
+
+        console.print(
+            f"[bright_yellow]Pagina {pagina + 1} van {totaal_paginas}[/bright_yellow]"
+        )
+
+        console.print(
+            "\n[bold yellow][N][/bold yellow] Volgende pagina | "
+            "[bold yellow][V][/bold yellow] Vorige pagina | "
+            "[bold yellow][0][/bold yellow] Terug | "
+            "[bold yellow][S][/bold yellow] Hoofdmenu"
+        )
+
+        console.print(
+            f"{start + 1}-{start + len(pagina_nummers)} = Nummer kiezen op deze pagina"
+        )
+
+        keuze = console.input(
+            "\nMaak keuze: "
+        )
+
+        if keuze.upper() == "N":
+
+            if pagina < totaal_paginas - 1:
+                pagina += 1
+
+            else:
+                toon_foutmelding(
+                    "Dit is de laatste pagina."
+                )
+
+            continue
+
+        elif keuze.upper() == "V":
+
+            if pagina > 0:
+                pagina -= 1
+
+            else:
+                console.print(
+                    "[yellow]Dit is de eerste pagina.[/yellow]"
+                )
+            continue
+
+        if keuze == "0":
+            return None
+        if not keuze.isdigit():
+            toon_foutmelding(
+                "Ongeldige keuze"
+            )
+
+            continue
+        keuze = int(keuze)
+        if keuze < 1 or keuze > len(nummers):
+            toon_foutmelding(
+                "Ongeldige keuze"
+            )
+            continue
+
+            return None
+        gekozen_nummer = nummers[
+            keuze - 1
+            ]
+        songtitel = gekozen_nummer.get(
+            "title",
+            "-"
+        )
+        artiest_lijst = gekozen_nummer.get(
             "artist-credit",
             []
         )
-
-        artiest_naam = "-"
-
-        if len(artiest_lijst) > 0:
-            artiest_naam = artiest_lijst[0].get(
-                "name",
-                "-"
+        if len(artiest_lijst) == 0:
+            toon_foutmelding(
+                "Geen artiest gevonden."
             )
-
-        tabel.add_row(
-            str(nummer),
-            opname.get(
-                "title",
-                "-"
-            ),
-            artiest_naam
+            return None
+        artiest_naam = artiest_lijst[0].get(
+            "name",
+            "-"
         )
-    console.print(
-        Panel(
-            tabel,
-            title=f"[bold bright_white]RESULTATEN VOOR {songtitel.upper()}[/bold bright_white]",
-            border_style="bright_yellow"
-        )
-    )
-    console.print(
-        f"[bright_yellow]Aantal gevonden nummers: {len(nummers)}[/bright_yellow]"
-    )
-    console.print(
-        f"[bright_yellow]Getoonde resultaten: {len(nummers[:10])}[/bright_yellow]"
-    )
-    console.print(
-        "[bright_yellow]Kies een nummer voor de songtekst.[/bright_yellow]"
-    )
-
-    console.print()
-
-    console.print("1-20 = Nummer kiezen op deze pagina")
-    console.print("0    = Terug")
-
-    keuze = console.input(
-        "\nMaak keuze: "
-    )
-
-    if keuze == "0":
-        return None
-    if not keuze.isdigit():
-        toon_foutmelding(
-            "Ongeldige keuze"
+        resultaat_songtekst = toon_songtekst(
+            artiest_naam,
+            songtitel
         )
 
-        return None
-    keuze = int(keuze)
-    if keuze < 1 or keuze > 10:
-        toon_foutmelding(
-            "Ongeldige keuze"
-        )
+        if resultaat_songtekst is None:
+            continue
 
         return None
-    gekozen_nummer = nummers[
-        keuze - 1
-        ]
-    songtitel = gekozen_nummer.get(
-        "title",
-        "-"
-    )
-    artiest_lijst = gekozen_nummer.get(
-        "artist-credit",
-        []
-    )
-    if len(artiest_lijst) == 0:
-        toon_foutmelding(
-            "Geen artiest gevonden."
-        )
-        return None
-    artiest_naam = artiest_lijst[0].get(
-        "name",
-        "-"
-    )
-    resultaat_songtekst = toon_songtekst(
-        artiest_naam,
-        songtitel
-    )
-
-    if resultaat_songtekst is None:
-        return None
-
-    return None
 
 def toon_muziek_menu():
     while True:
@@ -868,7 +973,7 @@ def toon_muziek_menu():
         submenu_keuze = console.input(
             "\nMaak een keuze "
             "[bold yellow][0][/bold yellow] t/m "
-            "[bold yellow][3][/bold yellow]: "
+            "[bold yellow][2][/bold yellow]: "
         ).strip()
 
         if submenu_keuze == "0":
@@ -885,29 +990,24 @@ def toon_muziek_menu():
             )
 
             if artiest_naam == "0":
-                break
+                continue
 
             if artiest_naam.upper() == "S":
-                break
+                return
 
-            resultaat= toon_artiesten(
+            resultaat = toon_artiesten(
                 artiest_naam
             )
 
             if resultaat == "hoofdmenu":
-                continue  # hiermee kom je weer in het hoofdmenu
-
-
+                continue
 
         elif submenu_keuze == "2":
-
             zoek_nummer_menu()
 
-            continue
-
         else:
-            console.print(
-                "[red]Ongeldige keuze[/red]"
+            toon_foutmelding(
+                "Ongeldige keuze"
             )
             continue
 
@@ -964,15 +1064,18 @@ def toon_favorieten_menu():
         elif submenu_keuze == "3":
 
             toon_favorieten()
-
             keuze = console.input(
-
                 "\nVoer het nummer van een favoriet in: "
-
             )
 
+            if not keuze.isdigit():
+                toon_foutmelding(
+                    "Ongeldige keuze"
+                )
+                continue
+
             with open(
-                    "m09_favorieten_beheren.txt",
+                    "m06_songteksten_favorieten.txt",
                     "r",
                     encoding="utf-8"
             ) as bestand:
@@ -980,6 +1083,12 @@ def toon_favorieten_menu():
                 favorieten = bestand.readlines()
 
             keuze = int(keuze)
+
+            if keuze < 1 or keuze > len(favorieten):
+                toon_foutmelding(
+                    "Ongeldige keuze"
+                )
+                continue
 
             favoriet = favorieten[keuze - 1].strip()
 
@@ -993,4 +1102,9 @@ def toon_favorieten_menu():
                 songtitel
             )
 
+            continue
+        else:
+            toon_foutmelding(
+                "Ongeldige keuze"
+            )
             continue

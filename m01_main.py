@@ -1,20 +1,23 @@
+from rich.align import Align
 from m00_imports import *
 from m02_musicbrainz import toon_muziek_menu, toon_favorieten_menu
 from m03_karaoke import toon_karaoke_menu
-from m10_utils import maak_menu_tabel
+from m05_utils import maak_menu_tabel
 
 # Toon het applicatielogo en de projectinformatie.
 def toon_logo():
     console.print(
         Panel(
-            "[center][bold bright_white]My Lyrics & Karaoke Finder[/bold bright_white][/center]",
+            Align.center(
+                "[bold bright_white]My Lyrics & Karaoke Finder[/bold bright_white]"
+            ),
             title="[bold bright_white]2026 NOVI Eindopdracht[/bold bright_white]",
             title_align="center",
             border_style="bold yellow",
             width=50,
         ),
-        justify="left"
     )
+
     console.print()
 toon_logo()
 
