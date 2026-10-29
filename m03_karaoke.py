@@ -87,26 +87,49 @@ def toon_karaoke_menu():
 # SUBMENU KEUZE 2:
 # Open YouTube-resultaten voor alle karaokevideo's van een artiest.
         elif submenu_keuze == "2":
+            beheer_karaoke_favorieten()
 
-            try:
-                with open(
+            continue
+def beheer_karaoke_favorieten():
+
+    while True:
+        console.clear()
+
+        menu = maak_menu_tabel(50)
+        menu.add_row("1", "Favorieten bekijken")
+        menu.add_row("2", "Favoriet verwijderen")
+        menu.add_row("0", "Terug")
+
+        console.print(
+            Panel(
+                menu,
+                title="KARAOKEFAVORIETEN",
+                border_style="bright_yellow",
+                width=50
+            )
+        )
+
+        keuze = console.input(
+            "\nMaak een keuze (0-2): "
+        ).strip()
+
+        if keuze == "0":
+            break
+
+        elif keuze == "1":
+
+            with open(
                     "m07_karaoke_favorieten.txt",
                     "r",
                     encoding="utf-8"
-                ) as bestand:
-                    favorieten = bestand.readlines()
-
-            except FileNotFoundError:
-                toon_foutmelding(
-                    "Geen karaokefavorieten gevonden."
-                )
-                continue
+            ) as bestand:
+                favorieten = bestand.readlines()
 
             tabel = maak_menu_tabel(80)
 
             for nummer, favoriet in enumerate(
-                favorieten,
-                start=1
+                    favorieten,
+                    start=1
             ):
                 omschrijving, url = (
                     favoriet.strip().split("|")
@@ -125,29 +148,36 @@ def toon_karaoke_menu():
                 )
             )
 
-            keuze = console.input(
+            keuze_favoriet = console.input(
                 "\nKies een favoriet (0 = terug): "
             ).strip()
 
-            if keuze == "0":
+            if keuze_favoriet == "0":
                 continue
 
-            if not keuze.isdigit():
+            if not keuze_favoriet.isdigit():
                 toon_foutmelding(
                     "Ongeldige keuze."
                 )
                 continue
+            keuze_favoriet = int(
+                keuze_favoriet
+            )
 
-            keuze = int(keuze)
-
-            if keuze < 1 or keuze > len(favorieten):
+            if (
+                    keuze_favoriet < 1
+                    or keuze_favoriet > len(favorieten)
+            ):
                 toon_foutmelding(
                     "Ongeldige keuze."
                 )
+
                 continue
 
             omschrijving, url = (
-                favorieten[keuze - 1]
+                favorieten[
+                    keuze_favoriet - 1
+                    ]
                 .strip()
                 .split("|")
             )
@@ -158,11 +188,15 @@ def toon_karaoke_menu():
                 f"[green]YouTube geopend voor {omschrijving}[/green]"
             )
 
+        elif keuze == "2":
+
+            console.print(
+                "[yellow]Favoriet verwijderen komt hier.[/yellow]"
+            )
+
             console.input(
                 "\nDruk op Enter om verder te gaan..."
             )
-
-            continue
 
 
 # Sla een karaokefavoriet op in het bestand met opgeslagen karaokevideo's.
