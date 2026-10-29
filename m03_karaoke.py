@@ -9,6 +9,7 @@ from m05_utils import (
 
 def toon_karaoke_menu():
     while True:
+        console.clear()
         submenu = maak_menu_tabel(50)
 
         submenu.add_row("1", "Zoek karaokevideo")
@@ -87,17 +88,80 @@ def toon_karaoke_menu():
 # Open YouTube-resultaten voor alle karaokevideo's van een artiest.
         elif submenu_keuze == "2":
 
+            try:
+                with open(
+                    "m07_karaoke_favorieten.txt",
+                    "r",
+                    encoding="utf-8"
+                ) as bestand:
+                    favorieten = bestand.readlines()
+
+            except FileNotFoundError:
+                toon_foutmelding(
+                    "Geen karaokefavorieten gevonden."
+                )
+                continue
+
+            tabel = maak_menu_tabel(80)
+
+            for nummer, favoriet in enumerate(
+                favorieten,
+                start=1
+            ):
+                omschrijving, url = (
+                    favoriet.strip().split("|")
+                )
+
+                tabel.add_row(
+                    str(nummer),
+                    omschrijving
+                )
+
             console.print(
-                "[yellow]Karaoke favorieten nog niet geïmplementeerd.[/yellow]"
+                Panel(
+                    tabel,
+                    title="Karaokefavorieten",
+                    border_style="bright_yellow"
+                )
             )
 
-            continue
+            keuze = console.input(
+                "\nKies een favoriet (0 = terug): "
+            ).strip()
 
-        else:
+            if keuze == "0":
+                continue
 
-            toon_foutmelding(
-                "Ongeldige keuze"
+            if not keuze.isdigit():
+                toon_foutmelding(
+                    "Ongeldige keuze."
+                )
+                continue
+
+            keuze = int(keuze)
+
+            if keuze < 1 or keuze > len(favorieten):
+                toon_foutmelding(
+                    "Ongeldige keuze."
+                )
+                continue
+
+            omschrijving, url = (
+                favorieten[keuze - 1]
+                .strip()
+                .split("|")
             )
+
+            webbrowser.open(url)
+
+            console.print(
+                f"[green]YouTube geopend voor {omschrijving}[/green]"
+            )
+
+            console.input(
+                "\nDruk op Enter om verder te gaan..."
+            )
+
             continue
 
 

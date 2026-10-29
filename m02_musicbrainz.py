@@ -77,6 +77,7 @@ def toon_artiesten(artiest_naam):
     pagina = 0
 
     while True:
+        console.clear()
         per_pagina = 10
 
         start = pagina * per_pagina
@@ -274,6 +275,7 @@ def toon_nummers_van_artiest(
 
     pagina = 0
     while True:
+        console.clear()
 #LINKER TABEL-----------------------------------
         linker_tabel = Table(
             border_style="bright_yellow",
@@ -954,6 +956,7 @@ def zoek_nummer_menu():
         return None
 
 def toon_muziek_menu():
+    console.clear()
     while True:
         submenu = maak_menu_tabel(45)
 
@@ -1012,6 +1015,7 @@ def toon_muziek_menu():
             continue
 
 def toon_favorieten_menu():
+    console.clear()
     while True:
 
         console.clear()

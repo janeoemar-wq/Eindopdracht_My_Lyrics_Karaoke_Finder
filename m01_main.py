@@ -23,6 +23,7 @@ toon_logo()
 
 # Bouw en toon het hoofdmenu met de beschikbare functionaliteiten.
 def toon_hoofdmenu():
+    console.clear()
     tabel = maak_menu_tabel(45)
 
     tabel.add_row("1", "Muziek en songteksten zoeken")
@@ -42,6 +43,7 @@ def toon_hoofdmenu():
 
 # Centrale programmalus die actief blijft totdat de gebruiker ervoor kiest de applicatie af te sluiten.
 while True:
+
     toon_hoofdmenu()
 # Vraag de gebruiker om een keuze te maken uit het HOOFDMENU.
     keuze = console.input(
