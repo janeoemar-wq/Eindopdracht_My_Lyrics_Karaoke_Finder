@@ -3,7 +3,9 @@ from m04_config import YOUTUBE_SEARCH_URL
 from m05_utils import (
     vraag_artiest_en_titel,
     maak_menu_tabel,
-    toon_foutmelding
+    toon_foutmelding,
+    vraag_opslaan_favoriet,
+    lees_bestand
 
 )
 
@@ -67,12 +69,11 @@ def toon_karaoke_menu():
                     border_style="green"
                 )
             )
-            # Vraag of de gebruiker de karaokezoekopdracht wil opslaan als favoriet.
-            opslag = console.input(
-                "\nOpslaan als karaokefavoriet? (j/n): "
-            ).strip().lower()
-
-            if opslag == "j":
+# Gebruik een herbruikbare hulpfunctie voor de J/N-vraag,
+# zodat dezelfde code niet meerdere keren geschreven hoeft te worden.
+            if vraag_opslaan_favoriet(
+                    "Opslaan als karaokefavoriet?"
+            ):
                 sla_karaoke_favoriet_op(
                     artiest,
                     titel,
@@ -118,12 +119,9 @@ def beheer_karaoke_favorieten():
 
         elif keuze == "1":
 
-            with open(
-                    "m07_karaoke_favorieten.txt",
-                    "r",
-                    encoding="utf-8"
-            ) as bestand:
-                favorieten = bestand.readlines()
+            favorieten = lees_bestand(
+                "m07_karaoke_favorieten.txt"
+            )
 
             tabel = maak_menu_tabel(80)
 
@@ -188,16 +186,139 @@ def beheer_karaoke_favorieten():
                 f"[green]YouTube geopend voor {omschrijving}[/green]"
             )
 
+
         elif keuze == "2":
 
+            with open(
+
+                    "m07_karaoke_favorieten.txt",
+
+                    "r",
+
+                    encoding="utf-8"
+
+            ) as bestand:
+
+                favorieten = bestand.readlines()
+
+            if not favorieten:
+                toon_foutmelding(
+
+                    "Geen karaokefavorieten gevonden."
+
+                )
+
+                continue
+
+            tabel = maak_menu_tabel(80)
+
+            for nummer, favoriet in enumerate(
+
+                    favorieten,
+
+                    start=1
+
+            ):
+                omschrijving, url = (
+
+                    favoriet.strip().split("|")
+
+                )
+
+                tabel.add_row(
+
+                    str(nummer),
+
+                    omschrijving
+
+                )
+
             console.print(
-                "[yellow]Favoriet verwijderen komt hier.[/yellow]"
+
+                Panel(
+
+                    tabel,
+
+                    title="Karaokefavorieten verwijderen",
+
+                    border_style="red"
+
+                )
+
+            )
+
+            keuze_verwijderen = console.input(
+
+                "\nNummer verwijderen (0 = terug): "
+
+            ).strip()
+
+            if keuze_verwijderen == "0":
+                continue
+
+            if not keuze_verwijderen.isdigit():
+                toon_foutmelding(
+
+                    "Ongeldige keuze."
+
+                )
+
+                continue
+
+            keuze_verwijderen = int(
+
+                keuze_verwijderen
+
+            )
+
+            if (
+
+                    keuze_verwijderen < 1
+
+                    or keuze_verwijderen > len(favorieten)
+
+            ):
+                toon_foutmelding(
+
+                    "Ongeldige keuze."
+
+                )
+
+                continue
+
+            del favorieten[
+
+                keuze_verwijderen - 1
+
+                ]
+
+            with open(
+
+                    "m07_karaoke_favorieten.txt",
+
+                    "w",
+
+                    encoding="utf-8"
+
+            ) as bestand:
+
+                bestand.writelines(
+
+                    favorieten
+
+                )
+
+            console.print(
+
+                "[green]Favoriet verwijderd.[/green]"
+
             )
 
             console.input(
+
                 "\nDruk op Enter om verder te gaan..."
             )
-
+        continue
 
 # Sla een karaokefavoriet op in het bestand met opgeslagen karaokevideo's.
 def sla_karaoke_favoriet_op(

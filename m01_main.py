@@ -2,7 +2,10 @@ from rich.align import Align
 from m00_imports import *
 from m02_musicbrainz import toon_muziek_menu, toon_favorieten_menu
 from m03_karaoke import toon_karaoke_menu
-from m05_utils import maak_menu_tabel
+from m05_utils import (
+    maak_menu_tabel,
+    toon_foutmelding
+)
 
 # Toon het applicatielogo en de projectinformatie.
 def toon_logo():
@@ -19,9 +22,7 @@ def toon_logo():
     )
 
     console.print()
-toon_logo()
-
-# Bouw en toon het hoofdmenu met de beschikbare functionaliteiten.
+# Bouw en toon het hoofdmenu van de applicatie.
 def toon_hoofdmenu():
     console.clear()
     tabel = maak_menu_tabel(45)
@@ -41,35 +42,42 @@ def toon_hoofdmenu():
         )
     )
 
-# Centrale programmalus die actief blijft totdat de gebruiker ervoor kiest de applicatie af te sluiten.
+toon_logo()
+
+# Houd het programma actief totdat de gebruiker ervoor kiest om af te sluiten.
 while True:
 
     toon_hoofdmenu()
-# Vraag de gebruiker om een keuze te maken uit het HOOFDMENU.
+# Vraag de gebruiker om een keuze uit het hoofdmenu.
     keuze = console.input(
         "[bold]Maak een keuze "
         "[bold yellow][0][/bold yellow] t/m "
         "[bold yellow][3][/bold yellow]: [/bold]"
     ).strip()
-# Controleer of de invoer overeenkomt met een beschikbare menuoptie.
+
+# Controleer of de invoer een geldige menuoptie bevat.
     if keuze not in ["0", "1", "2", "3"]:
-        logging.error(f"Ongeldige menukeuze ingevoerd: {keuze}")
+        logging.error(
+            f"Ongeldige menukeuze ingevoerd: {keuze}")
 # Informeer de gebruiker dat een ongeldige menuoptie is ingevoerd.
-        console.print(
-            "[bold red]Ongeldige keuze. Kies 0 t/m 3.[/bold red]"
+        toon_foutmelding(
+        "Ongeldige keuze. Kies 0 t/m 3."
         )
         continue
 
-# Open het SUBMENU voor keuze 1 "Muziek en songteksten zoeken".
+# Open het submenu Muziek en songteksten.
     if keuze == "1":
         toon_muziek_menu()
-# Open het SUBMENU voor keuze 2 "Favorieten beheren".
+
+# Open het submenu Favorieten beheren.
     elif keuze == "2":
         toon_favorieten_menu()
-# Open het SUBMENU voor keuze 3 "Karaokevideo's zoeken.
+
+# Open het submenu Karaokevideo's zoeken.
     elif keuze == "3":
         toon_karaoke_menu()
 
+# Sluit de applicatie af.
     elif keuze == "0":
 
         console.print(

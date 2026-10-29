@@ -26,6 +26,7 @@ from m05_utils import (
     haal_data_op,
     toon_foutmelding,
     maak_menu_tabel,
+    vraag_opslaan_favoriet,
     # toon_paginering
 )
 from urllib.parse import quote ## Zet spaties en speciale tekens om naar een geldige URL voor de API.
@@ -42,7 +43,8 @@ musicbrainzngs.set_useragent(
 def zoek_artiest(artiest_naam) -> dict | None:
     try:
         resultaat = musicbrainzngs.search_artists(
-            artiest_naam
+            artiest_naam,
+            limit=100
         )
         return resultaat
     except Exception as fout:
@@ -354,6 +356,13 @@ def toon_nummers_van_artiest(
             "[bold yellow][0][/bold yellow] Terug | "
             "[bold yellow][S][/bold yellow] Hoofdmenu"
         )
+        totaal_paginas = (len(works) + 19) // 20
+
+        console.print(
+            f"[bright_yellow]Aantal gevonden nummers: {len(works)}[/bright_yellow]")
+
+        console.print(
+            f"[bright_yellow]Pagina {pagina + 1} van {totaal_paginas}[/bright_yellow]")
 
         console.print("1-20 = Nummer kiezen op deze pagina")
 
@@ -414,7 +423,8 @@ def toon_nummers_van_artiest(
     return None, None
 def toon_songtekst(
         artiest_naam,
-        songtitel
+        songtitel,
+        vraag_om_opslaan=True
 ) -> str | None:
 
 # Zet spaties en speciale tekens om naar een veilige URL-notatie voor de lyrics API.
@@ -435,7 +445,7 @@ def toon_songtekst(
 # Toon een nette foutmelding wanneer de songtekst niet beschikbaar is.
         if data is None:
             console.print(
-                f"[red]Geen songtekst gevonden voor:[/red] "
+                f"[red]Voor dit nummer is geen songtekst beschikbaar:[/red] "
                 f"{artiest_naam} - {songtitel}"
             )
 
@@ -459,19 +469,21 @@ def toon_songtekst(
             )
         )
 
-# OPSLAAN
-        opslaan = console.input(
-            "\nOpslaan als favoriet? (J/N): "
-        ).upper()
+# Gebruik een herbruikbare hulpfunctie voor de J/N-vraag,
+# zodat dezelfde code niet meerdere keren geschreven hoeft te worden.
+        if vraag_om_opslaan:
+            if vraag_opslaan_favoriet(
+                "Opslaan als favoriet?"
+            ):
+                sla_favoriet_op(
+                    artiest_naam,
+                    songtitel
+                )
 
-        if opslaan == "J":
 
-            sla_favoriet_op(
-                artiest_naam,
-                songtitel
-            )
-
-
+        console.input(
+            "\nDruk op Enter om terug te gaan..."
+        )
         return songtekst
 
     except Exception as fout:
@@ -691,7 +703,8 @@ def zoek_nummer(songtitel) -> dict | None:
     try:
 
         resultaat = musicbrainzngs.search_recordings(
-            recording=songtitel
+            recording=songtitel,
+            limit = 100
         )
 
         return resultaat
@@ -1103,7 +1116,8 @@ def toon_favorieten_menu():
 
             toon_songtekst(
                 artiest_naam,
-                songtitel
+                songtitel,
+                vraag_om_opslaan=False
             )
 
             continue
