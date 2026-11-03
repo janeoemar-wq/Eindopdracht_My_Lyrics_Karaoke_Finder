@@ -234,12 +234,33 @@ architectuur en onderhoudbaarheid.<br>
 
 ## Datum: 02-11-2026 
 ⬜ eerste video's opgenomen in clipchamp
-⬜ 
+⬜ Terminologie consistenter gemaakt
+⬜ Menu-structuur verbeterd:
+* Hoofdmenu vereenvoudigd naar:
+* Muziek en songteksten zoeken
+* Karaokevideo's zoeken
+* Afsluiten
+* Het aparte menu Favorieten beheren verwijderd.
+* Opgeslagen songteksten ondergebracht bij Muziek en songteksten zoeken.
+* Opgeslagen karaokevideo's ondergebracht bij Karaokevideo's zoeken.
 
 ## Datum: 03-11-2026 
-⬜ 
+⬜ Navigatie verbeterd De S-toets werkte eerst niet overal goed.
+⬜ Functioneel getest
+* Inconsistente naamgeving.
+* Onduidelijke foutmeldingen.
+* Fouten in navigatie.
+* Problemen met return-statements.
+* Problemen met break-statements.
+* Problemen door verkeerde inspringingen.
+* Ongeldige invoer die niet altijd correct werd afgehandeld.
 ## Datum: 04-11-2026 
-⬜ 
+⬜  Presentatie voorbereid
+Volledige spreektekst gemaakt.
+Technische onderbouwing toegevoegd.
+Problemen tijdens ontwikkeling beschreven.
+Twee doorontwikkelingen uitgewerkt.
+Tekst ingekort richting de maximale videoduur.
 ## Datum: 05-11-2026 
 ⬜ 
 ## Datum: 06-11-2026 
