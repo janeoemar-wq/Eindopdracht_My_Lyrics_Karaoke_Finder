@@ -289,10 +289,8 @@ def toon_nummers_van_artiest(
             justify="center"
         )
 
-
         linker_tabel.add_column(
             "Titel",
-            max_width=35,
             no_wrap=True,
             overflow="ellipsis"
         )
@@ -307,10 +305,8 @@ def toon_nummers_van_artiest(
             justify="center"
         )
 
-
         rechter_tabel.add_column(
             "Titel",
-            max_width=35,
             no_wrap=True,
             overflow="ellipsis"
         )
@@ -340,12 +336,12 @@ def toon_nummers_van_artiest(
                 Columns(
                     [linker_tabel, rechter_tabel],
                     equal=True,
-                    expand=False
+                    expand=True
                 ),
                 title=f"[bold bright_white]NUMMERS VAN {artiest_naam.upper()}[/bold bright_white]",
                 title_align="center",
                 border_style="bright_yellow",
-                width=160
+
             )
         )
 
@@ -473,7 +469,7 @@ def toon_songtekst(
 # zodat dezelfde code niet meerdere keren geschreven hoeft te worden.
         if vraag_om_opslaan:
             if vraag_opslaan_favoriet(
-                "Opslaan als favoriet?"
+                "Songtekst opslaan?"
             ):
                 sla_favoriet_op(
                     artiest_naam,
@@ -498,7 +494,7 @@ def sla_favoriet_op(
         songtitel
 ):
     with open(
-            "m06_songteksten_favorieten.txt",
+            "m06_opgeslagen_songteksten.txt",
             "a",
             encoding="utf-8"
     ) as bestand:
@@ -508,25 +504,25 @@ def sla_favoriet_op(
         )
 
     console.print(
-        "[green]Favoriet opgeslagen.[/green]"
+        "[green]Songtekst opgeslagen.[/green]"
     )
 #TOON FAVORIETEN_______________________________
-def toon_favorieten():
+def toon_opgeslagen_songteksten():
 
     try:
 
         with open(
-                "m06_songteksten_favorieten.txt",
+                "m06_opgeslagen_songteksten.txt",
                 "r",
                 encoding="utf-8"
         ) as bestand:
 
-            favorieten = bestand.readlines()
+            songteksten = bestand.readlines()
 
-        if len(favorieten) == 0:
+        if len(songteksten) == 0:
 
             console.print(
-                "[yellow]Geen favorieten gevonden.[/yellow]"
+                "[yellow]Geen opgeslagen songteksten gevonden.[/yellow]"
             )
             return None
 
@@ -536,7 +532,7 @@ def toon_favorieten():
 
         linker_tabel.add_column("Nr", width=5)
         linker_tabel.add_column(
-            "Favoriet",
+            "Songtekst",
             max_width=40,
             no_wrap=True,
             overflow="ellipsis"
@@ -548,63 +544,64 @@ def toon_favorieten():
 
         rechter_tabel.add_column("Nr", width=5)
         rechter_tabel.add_column(
-            "Favoriet",
+            "Songtekst",
             max_width=40,
             no_wrap=True,
             overflow="ellipsis"
         )
 
-        midden = (len(favorieten) + 1) // 2
+        midden = (len(songteksten) + 1) // 2
         for nummer, favoriet in enumerate(
-                favorieten[:midden],
+                songteksten[:midden],
                 start=1
         ):
             linker_tabel.add_row(
                 str(nummer),
-                f"[cyan]{favoriet.strip()}[/cyan]"
+                f"[bright_yellow]{favoriet.strip()}[/bright_yellow]"
             )
 
         for nummer, favoriet in enumerate(
-                favorieten[midden:],
+                songteksten[midden:],
                 start=midden + 1
         ):
             rechter_tabel.add_row(
                 str(nummer),
-                f"[cyan]{favoriet.strip()}[/cyan]"
+                f"[bright_yellow]{favoriet.strip()}[/bright_yellow]"
             )
         console.print(
             Panel(
                 Columns(
                     [linker_tabel, rechter_tabel],
                     equal=True,
-                    expand=False
+                    expand=True,
+
                 ),
-                title="[bold bright_white]OPGESLAGEN FAVORIETEN [/bold bright_white]",
+                title="[bold bright_white]OPGESLAGEN SONGTEKSTEN[/bold bright_white]",
                 border_style="bright_yellow",
-                width=160
+                width=100
             )
         )
 
     except FileNotFoundError:
 
         console.print(
-            "[yellow]Nog geen favorieten opgeslagen.[/yellow]"
+            "[yellow]Nog geen songteksten opgeslagen.[/yellow]"
         )
 
-#VERWIJDER FAVORIET
-def verwijder_favoriet():
+#VERWIJDER SONGTEKST
+def verwijder_songtekst():
 
     with open(
-            "m06_songteksten_favorieten.txt",
+            "m06_opgeslagen_songteksten.txt",
             "r",
             encoding="utf-8"
     ) as bestand:
 
-        favorieten = bestand.readlines()
-#bij foutieve keuze als er geen favorieten zijn, bestand is leeg
-    if len(favorieten) == 0:
+        songteksten = bestand.readlines()
+#bij foutieve keuze als er geen songteksten zijn, bestand is leeg
+    if len(songteksten) == 0:
         console.print(
-            "[yellow]Geen favorieten gevonden.[/yellow]"
+            "[yellow]Geen songteksten gevonden.[/yellow]"
         )
         return None
 
@@ -619,23 +616,23 @@ def verwijder_favoriet():
     )
 
     tabel.add_column(
-        "Favoriet",
+        "Songtekst",
         overflow="ellipsis"
     )
 
-    for nummer, favoriet in enumerate(
-            favorieten,
+    for nummer, songtekst in enumerate(
+            songteksten,
             start=1
     ):
         tabel.add_row(
             str(nummer),
-            favoriet.strip()
+            songtekst.strip()
         )
 
     console.print(
         Panel(
             tabel,
-            title="[bold bright_white]FAVORIET VERWIJDEREN[/bold bright_white]",
+            title="[bold bright_white]SONGTEKST VERWIJDEREN[/bold bright_white]",
             border_style="bright_yellow"
         )
     )
@@ -669,7 +666,7 @@ def verwijder_favoriet():
 
     for nummer in keuzes:
 
-        if nummer < 1 or nummer > len(favorieten):
+        if nummer < 1 or nummer > len(songteksten):
             console.print(
                 f"[red]Ongeldig nummer: {nummer}[/red]"
             )
@@ -679,19 +676,19 @@ def verwijder_favoriet():
         keuzes,
         reverse=True
     ):
-        del favorieten[te_verwijderen - 1]
+        del songteksten[te_verwijderen - 1]
 
     with open(
-            "m06_songteksten_favorieten.txt",
+            "m06_opgeslagen_songteksten.txt",
             "w",
             encoding="utf-8"
     ) as bestand:
         bestand.writelines(
-            favorieten
+            songteksten
         )
 
     console.print(
-        f"[green]{len(keuzes)} favoriet(en) verwijderd.[/green]"
+        f"[green]{len(keuzes)} songtekst(en) verwijderd.[/green]"
     )
     console.input(
         "\nDruk op Enter om verder te gaan..."
@@ -924,12 +921,17 @@ def zoek_nummer_menu():
 
         if keuze == "0":
             return None
-        if not keuze.isdigit():
+
+        elif keuze.upper() == "S":
+            return "hoofdmenu"
+
+        elif not keuze.isdigit():
             toon_foutmelding(
                 "Ongeldige keuze"
             )
 
             continue
+
         keuze = int(keuze)
         if keuze < 1 or keuze > len(nummers):
             toon_foutmelding(
@@ -975,6 +977,7 @@ def toon_muziek_menu():
 
         submenu.add_row("1", "Zoek artiest")
         submenu.add_row("2", "Zoek nummer")
+        submenu.add_row("3", "Opgeslagen songteksten")
         submenu.add_row("0", "Terug")
 
         console.print(
@@ -983,13 +986,13 @@ def toon_muziek_menu():
         title="[bold bright_white]MUZIEK & SONGTEKSTEN[/bold bright_white]",
         title_align="center",
         border_style="bright_yellow",
-        width=50,
+        width=60,
         )
         )
         submenu_keuze = console.input(
             "\nMaak een keuze "
             "[bold yellow][0][/bold yellow] t/m "
-            "[bold yellow][2][/bold yellow]: "
+            "[bold yellow][3][/bold yellow]: "
         ).strip()
 
         if submenu_keuze == "0":
@@ -1016,10 +1019,20 @@ def toon_muziek_menu():
             )
 
             if resultaat == "hoofdmenu":
-                continue
+                return
+
 
         elif submenu_keuze == "2":
-            zoek_nummer_menu()
+
+            resultaat = zoek_nummer_menu()
+
+            if resultaat == "hoofdmenu":
+                return
+
+
+        elif submenu_keuze == "3":
+
+            toon_songteksten_menu()
 
         else:
             toon_foutmelding(
@@ -1027,22 +1040,22 @@ def toon_muziek_menu():
             )
             continue
 
-def toon_favorieten_menu():
+def toon_songteksten_menu():
     console.clear()
     while True:
 
         console.clear()
-        submenu = maak_menu_tabel(50)
+        submenu = maak_menu_tabel(60)
 
-        submenu.add_row("1", "Favorieten bekijken")
-        submenu.add_row("2", "Favoriet verwijderen")
-        submenu.add_row("3", "Songtekst bekijken")
+        submenu.add_row("1", "Opgeslagen songteksten bekijken")
+        submenu.add_row("2", "Songtekst verwijderen")
+        submenu.add_row("3", "Songtekst openen")
         submenu.add_row("0", "Terug")
 
         console.print(
             Panel(
                 submenu,
-                title="[bold bright_white]FAVORIETEN BEHEREN[/bold bright_white]",
+                title="[bold bright_white]OPGESLAGEN SONGTEKSTEN[/bold bright_white]",
                 title_align="center",
                 border_style="bright_yellow",
                 width=50,
@@ -1060,7 +1073,7 @@ def toon_favorieten_menu():
 
         if submenu_keuze == "1":
 
-            toon_favorieten()
+            toon_opgeslagen_songteksten()
 
             console.input(
                 "\nDruk op Enter om verder te gaan..."
@@ -1069,7 +1082,7 @@ def toon_favorieten_menu():
 
         elif submenu_keuze == "2":
 
-            resultaat = verwijder_favoriet()
+            resultaat = verwijder_songtekst()
 
             if resultaat == "hoofdmenu":
                 break
@@ -1080,9 +1093,9 @@ def toon_favorieten_menu():
 
         elif submenu_keuze == "3":
 
-            toon_favorieten()
+            toon_opgeslagen_songteksten()
             keuze = console.input(
-                "\nVoer het nummer van een favoriet in: "
+                "\nVoer het nummer van een opgeslagen songtekst in: "
             )
 
             if not keuze.isdigit():
@@ -1092,24 +1105,24 @@ def toon_favorieten_menu():
                 continue
 
             with open(
-                    "m06_songteksten_favorieten.txt",
+                    "m06_opgeslagen_songteksten.txt",
                     "r",
                     encoding="utf-8"
             ) as bestand:
 
-                favorieten = bestand.readlines()
+                songteksten = bestand.readlines()
 
             keuze = int(keuze)
 
-            if keuze < 1 or keuze > len(favorieten):
+            if keuze < 1 or keuze > len(songteksten):
                 toon_foutmelding(
                     "Ongeldige keuze"
                 )
                 continue
 
-            favoriet = favorieten[keuze - 1].strip()
+            songtekst = songteksten[keuze - 1].strip()
 
-            artiest_naam, songtitel = favoriet.split(
+            artiest_naam, songtitel = songtekst.split(
                 " - ",
                 maxsplit=1
             )

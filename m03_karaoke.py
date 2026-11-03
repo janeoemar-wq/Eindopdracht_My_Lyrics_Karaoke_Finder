@@ -15,7 +15,7 @@ def toon_karaoke_menu():
         submenu = maak_menu_tabel(50)
 
         submenu.add_row("1", "Zoek karaokevideo")
-        submenu.add_row("2", "Karaokefavorieten")
+        submenu.add_row("2", "Opgeslagen karaokevideo's")
         submenu.add_row("0", "Terug")
 
         console.print(
@@ -72,7 +72,7 @@ def toon_karaoke_menu():
 # Gebruik een herbruikbare hulpfunctie voor de J/N-vraag,
 # zodat dezelfde code niet meerdere keren geschreven hoeft te worden.
             if vraag_opslaan_favoriet(
-                    "Opslaan als karaokefavoriet?"
+                    "Karaokevideo opslaan?"
             ):
                 sla_karaoke_favoriet_op(
                     artiest,
@@ -81,7 +81,7 @@ def toon_karaoke_menu():
                 )
 
                 console.print(
-                    "[green]Karaokefavoriet opgeslagen.[/green]"
+                    "[green]Karaokevideo opgeslagen.[/green]"
                 )
             continue
 
@@ -97,14 +97,14 @@ def beheer_karaoke_favorieten():
         console.clear()
 
         menu = maak_menu_tabel(50)
-        menu.add_row("1", "Favorieten bekijken")
-        menu.add_row("2", "Favoriet verwijderen")
+        menu.add_row("1", "Opgeslagen karaokevideo's bekijken")
+        menu.add_row("2", "Karaokevideo verwijderen")
         menu.add_row("0", "Terug")
 
         console.print(
             Panel(
                 menu,
-                title="KARAOKEFAVORIETEN",
+                title="OPGESLAGEN KARAOKEVIDEO'S",
                 border_style="bright_yellow",
                 width=50
             )
@@ -120,7 +120,7 @@ def beheer_karaoke_favorieten():
         elif keuze == "1":
 
             favorieten = lees_bestand(
-                "m07_karaoke_favorieten.txt"
+                "m07_opgeslagen_karaokevideo.txt"
             )
 
             tabel = maak_menu_tabel(80)
@@ -141,13 +141,13 @@ def beheer_karaoke_favorieten():
             console.print(
                 Panel(
                     tabel,
-                    title="Karaokefavorieten",
+                    title="Opgeslagen karaokevideo's",
                     border_style="bright_yellow"
                 )
             )
 
             keuze_favoriet = console.input(
-                "\nKies een favoriet (0 = terug): "
+                "\nKies een karaokevideo (0 = terug): "
             ).strip()
 
             if keuze_favoriet == "0":
@@ -155,7 +155,7 @@ def beheer_karaoke_favorieten():
 
             if not keuze_favoriet.isdigit():
                 toon_foutmelding(
-                    "Ongeldige keuze."
+                    "Geen opgeslagen karaokevideo's gevonden."
                 )
                 continue
             keuze_favoriet = int(
@@ -167,7 +167,7 @@ def beheer_karaoke_favorieten():
                     or keuze_favoriet > len(favorieten)
             ):
                 toon_foutmelding(
-                    "Ongeldige keuze."
+                    "Geen opgeslagen karaokevideo's gevonden."
                 )
 
                 continue
@@ -191,7 +191,7 @@ def beheer_karaoke_favorieten():
 
             with open(
 
-                    "m07_karaoke_favorieten.txt",
+                    "m07_opgeslagen_karaokevideo.txt",
 
                     "r",
 
@@ -203,9 +203,7 @@ def beheer_karaoke_favorieten():
 
             if not favorieten:
                 toon_foutmelding(
-
-                    "Geen karaokefavorieten gevonden."
-
+                    "Geen opgeslagen karaokevideo's gevonden."
                 )
 
                 continue
@@ -236,15 +234,10 @@ def beheer_karaoke_favorieten():
             console.print(
 
                 Panel(
-
                     tabel,
-
-                    title="Karaokefavorieten verwijderen",
-
+                    title="KARAOKEVIDEO VERWIJDEREN",
                     border_style="red"
-
                 )
-
             )
 
             keuze_verwijderen = console.input(
@@ -294,7 +287,7 @@ def beheer_karaoke_favorieten():
 
             with open(
 
-                    "m07_karaoke_favorieten.txt",
+                    "m07_opgeslagen_karaokevideo.txt",
 
                     "w",
 
@@ -310,7 +303,7 @@ def beheer_karaoke_favorieten():
 
             console.print(
 
-                "[green]Favoriet verwijderd.[/green]"
+                "[green]Karaokevideo verwijderd.[/green]"
 
             )
 
@@ -327,7 +320,7 @@ def sla_karaoke_favoriet_op(
     url
 ):
     with open(
-        "m07_karaoke_favorieten.txt",
+            "m07_opgeslagen_karaokevideo.txt",
         "a",
         encoding="utf-8"
     ) as bestand:

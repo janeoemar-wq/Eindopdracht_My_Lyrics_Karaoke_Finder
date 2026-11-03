@@ -1,11 +1,8 @@
 from rich.align import Align
 from m00_imports import *
-from m02_musicbrainz import toon_muziek_menu, toon_favorieten_menu
+from m02_musicbrainz import (toon_muziek_menu)
 from m03_karaoke import toon_karaoke_menu
-from m05_utils import (
-    maak_menu_tabel,
-    toon_foutmelding
-)
+from m05_utils import (maak_menu_tabel,toon_foutmelding)
 
 # Toon het applicatielogo en de projectinformatie.
 def toon_logo():
@@ -17,10 +14,9 @@ def toon_logo():
             title="[bold bright_white]2026 NOVI Eindopdracht[/bold bright_white]",
             title_align="center",
             border_style="bold yellow",
-            width=50,
-        ),
+            width=60,
+        )
     )
-
     console.print()
 # Bouw en toon het hoofdmenu van de applicatie.
 def toon_hoofdmenu():
@@ -28,8 +24,7 @@ def toon_hoofdmenu():
     tabel = maak_menu_tabel(45)
 
     tabel.add_row("1", "Muziek en songteksten zoeken")
-    tabel.add_row("2", "Favorieten beheren")
-    tabel.add_row("3", "Karaokevideo's zoeken")
+    tabel.add_row("2", "Karaokevideo's zoeken")
     tabel.add_row("0", "Afsluiten")
 
     console.print(
@@ -38,7 +33,7 @@ def toon_hoofdmenu():
             title="[bold bright_white]HOOFDMENU[/bold bright_white]",
             title_align="center",
             border_style="bright_yellow",
-            width=50
+            width=60
         )
     )
 
@@ -52,16 +47,16 @@ while True:
     keuze = console.input(
         "[bold]Maak een keuze "
         "[bold yellow][0][/bold yellow] t/m "
-        "[bold yellow][3][/bold yellow]: [/bold]"
+        "[bold yellow][2][/bold yellow]: [/bold]"
     ).strip()
 
 # Controleer of de invoer een geldige menuoptie bevat.
-    if keuze not in ["0", "1", "2", "3"]:
+    if keuze not in ["0", "1", "2"]:
         logging.error(
             f"Ongeldige menukeuze ingevoerd: {keuze}")
 # Informeer de gebruiker dat een ongeldige menuoptie is ingevoerd.
         toon_foutmelding(
-        "Ongeldige keuze. Kies 0 t/m 3."
+        "Ongeldige keuze. Kies 0 t/m 2."
         )
         continue
 
@@ -69,12 +64,8 @@ while True:
     if keuze == "1":
         toon_muziek_menu()
 
-# Open het submenu Favorieten beheren.
-    elif keuze == "2":
-        toon_favorieten_menu()
-
 # Open het submenu Karaokevideo's zoeken.
-    elif keuze == "3":
+    elif keuze == "2":
         toon_karaoke_menu()
 
 # Sluit de applicatie af.
