@@ -995,6 +995,12 @@ def toon_muziek_menu():
             "[bold yellow][3][/bold yellow]: "
         ).strip()
 
+        if submenu_keuze == "":
+            toon_foutmelding(
+                "Maak een keuze."
+            )
+            continue
+
         if submenu_keuze == "0":
             break
 
@@ -1007,6 +1013,11 @@ def toon_muziek_menu():
             artiest_naam = console.input(
                 "[bold white]Voer artiestnaam in: [/bold white]"
             )
+            if artiest_naam.strip() == "":
+                toon_foutmelding(
+                    "Voer een artiestnaam in."
+                )
+                continue
 
             if artiest_naam == "0":
                 continue
@@ -1041,10 +1052,10 @@ def toon_muziek_menu():
             continue
 
 def toon_songteksten_menu():
-    console.clear()
     while True:
 
         console.clear()
+
         submenu = maak_menu_tabel(60)
 
         submenu.add_row("1", "Opgeslagen songteksten bekijken")
@@ -1067,6 +1078,12 @@ def toon_songteksten_menu():
             "[bold yellow][0][/bold yellow] t/m "
             "[bold yellow][3][/bold yellow]: "
         ).strip()
+
+        if submenu_keuze == "":
+            toon_foutmelding(
+                "Maak een keuze."
+            )
+            continue
 
         if submenu_keuze == "0":
             break

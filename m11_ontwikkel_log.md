@@ -34,7 +34,7 @@
 ⬜ Titel zoeken<br>
 ⬜ Songtekst ophalen via LRCLIB<br>
 ⬜ Songtekst tonen in Rich Panel <br>
-⬜ Songtekst opslaan in JSON<br>
+⬜ Eerste opzet voor opslag van songteksten onderzocht.<br>
 ⬜ Opgeslagen nummers bekijken <br>
 ⬜ Karaokefunctie bouwen  <br>
 ⬜ Testen: Queen gekozen-> Panel: NUMMERS VAN -> 10 nummers tonen-> 1 t/m 10 = nummer kiezen  <br>
@@ -254,14 +254,26 @@ architectuur en onderhoudbaarheid.<br>
 * Problemen met break-statements.
 * Problemen door verkeerde inspringingen.
 * Ongeldige invoer die niet altijd correct werd afgehandeld.
-## Datum: 04-11-2026 
+⬜ Tweede functionele test uitgevoerd aan de hand van een functioneel testdocument.
+⬜ Geconstateerde verbeterpunten opgelost en opnieuw getest.
+
+## Datum: 04-11-2026
+⬜ Verantwoordingsvideo voorbereid op basis van de beoordelingscriteria 1.1 t/m 2.2.
 ⬜  Presentatie voorbereid
-Volledige spreektekst gemaakt.
-Technische onderbouwing toegevoegd.
-Problemen tijdens ontwikkeling beschreven.
-Twee doorontwikkelingen uitgewerkt.
-Tekst ingekort richting de maximale videoduur.
+* Volledige spreektekst gemaakt.
+* Technische onderbouwing toegevoegd.
+* Problemen tijdens ontwikkeling beschreven.
+* Twee doorontwikkelingen uitgewerkt.
+* Tekst ingekort richting de maximale videoduur.
 ## Datum: 05-11-2026 
-⬜ 
+⬜ nog een paar ontbrekende meldingen bij foutieve invoeren toegevoegd.
+⬜ m05_utils aan gepast( druk op enter...) en (console clear bij while, def toon_muziek_menu():, def toon_muziek_menu():)
+⬜ mp4 video bijna gereed, beeld en audio bijna gereed, teksten toegevoegd
+⬜ flowchart opnieuw gemaakt adhv inrichting/ ontwikkeling versie 1.0 en 2.0 worden toegevoegd aa opdracht
+⬜ map in te leveren gemaakt:
+* flowchart versie 1.0 en 2.0 
+* functionele test
+* coorwaardelijke criteria ingevuld 
+
 ## Datum: 06-11-2026 
 ⬜ 

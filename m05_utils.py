@@ -26,7 +26,6 @@ logging.basicConfig(
     level=logging.ERROR,
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
-
 # Vraag de gebruiker om een artiest en titel.
 def vraag_artiest_en_titel():
     artiest = console.input("Artiest: ").strip()
@@ -54,6 +53,10 @@ def toon_foutmelding(tekst):
             title="Fout",
             border_style="red"
         )
+    )
+
+    console.input(
+        "\nDruk op Enter om verder te gaan..."
     )
 
 # voor de tabellen en panels gebruik ik dezelfde opmaak in:
