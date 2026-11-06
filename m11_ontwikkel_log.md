@@ -276,4 +276,6 @@ architectuur en onderhoudbaarheid.<br>
 * coorwaardelijke criteria ingevuld 
 
 ## Datum: 06-11-2026 
-⬜ 
+⬜ 05_utils.py + m04_config.py: Logging gecentraliseerd door verwijzing naar LOG_BESTAND in 
+configbestand. Oude en nieuwe foutmeldingen samengevoegd in m09_fouten.log zodat alle 
+fouten persistent in één logbestand worden opgeslagen.

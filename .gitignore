@@ -1,4 +1,3 @@
-In de gitignore staat het volgende:
 # Virtuele omgeving
 .venv/
 
@@ -12,5 +11,5 @@ __pycache__/
 # Mijn persoonlijke instellingen
 m04_config.py
 
-# Logbestand
-temp.log
+# Logbestanden
+*.log

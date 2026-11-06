@@ -18,11 +18,12 @@ Voorbeelden:
 """
 from m00_imports import *
 import logging
+from m04_config import LOG_BESTAND
 
 # Configureer logging zodat technische fouten automatisch
-# worden opgeslagen in het logbestand temp.log.
+# worden opgeslagen in het logbestand fouten.log
 logging.basicConfig(
-    filename="temp.log",
+    filename=LOG_BESTAND,
     level=logging.ERROR,
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
